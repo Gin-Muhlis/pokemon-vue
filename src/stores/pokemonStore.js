@@ -24,7 +24,6 @@ export const usePokemonStore = defineStore("pokemonStore", () => {
         try {
             fetchData()
         } catch (error) {
-            console.log('error')
             error.value = "Get data pokemon failed!"
         } finally {
             isSkeleton.value = false

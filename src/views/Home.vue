@@ -5,7 +5,7 @@
          <Alert v-if="store.error" :message="store.error" />
 
         <!-- Skeleton -->
-        <div v-else-if="store.isSkeleton" class="grid grid-cols-auto-fit gap-16">
+        <div v-else-if="store.isSkeleton" class="skeletons grid grid-cols-auto-fit gap-16">
             <SkeletonCard v-for="count in store.skeletonCount" :key="count" />
         </div>
 
