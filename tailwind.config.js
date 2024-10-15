@@ -8,6 +8,9 @@ export default {
     extend: {
       colors: {
         "background": "#E6E9F1"
+      },
+      gridTemplateColumns: {
+        "auto-fit": 'repeat(auto-fit, minmax(360px, 1fr))'
       }
     },
     fontFamily: {
