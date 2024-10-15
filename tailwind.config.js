@@ -5,7 +5,17 @@ export default {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "background": "#E6E9F1"
+      }
+    },
+    fontFamily: {
+      "poppins": ["Poppins", "sans-serif"]
+    }
   },
-  plugins: [],
+  plugins: [require('daisyui'),],
+  daisyui: {
+    themes: ["light", "cyberpunk"],
+  },
 }
