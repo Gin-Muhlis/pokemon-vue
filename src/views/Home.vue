@@ -6,7 +6,7 @@
 
         <!-- Skeleton -->
         <div v-else-if="store.isSkeleton" class="grid grid-cols-auto-fit gap-16">
-            <SkelotonCard v-for="count in store.skeletonCount" :key="count" />
+            <SkeletonCard v-for="count in store.skeletonCount" :key="count" />
         </div>
 
         <div v-else-if="!store.isSkeleton" class="w-full">
@@ -33,7 +33,7 @@
 <script setup>
 import Card from "../components/Card.vue"
 import Loading from "../components/Loading.vue"
-import SkelotonCard from "../components/SkelotonCard.vue"
+import SkeletonCard from "../components/SkeletonCard.vue"
 import Alert from "../components/Alert.vue"
 import { onMounted } from "vue"
 import { usePokemonStore } from "../stores/pokemonStore.js"

@@ -16,8 +16,8 @@ describe("Alert.vue", () => {
     })
 
     // cek struktur alert apakah sudah benar
-    it('renders the alert structure correctly', () => {
-        const message = 'Error occurred'
+    it("renders the alert structure correctly", () => {
+        const message = "Error occurred"
         const wrapper = mount(Alert, {
           props: {
             message
@@ -25,15 +25,15 @@ describe("Alert.vue", () => {
         })
     
         // Memastikan elemen role alert ada
-        const alertDiv = wrapper.get('div[role="alert"]')
+        const alertDiv = wrapper.get(".alert-error")
         expect(alertDiv.exists()).toBe(true)
     
         // Memastikan ada svg dengan class yang tepat
-        const svg = wrapper.get('svg.h-6.w-6.shrink-0.stroke-current')
+        const svg = wrapper.get(".icon-alert")
         expect(svg.exists()).toBe(true)
     
         // Memastikan teks pesan ada di dalam span
-        const span = wrapper.get('span')
+        const span = wrapper.get("span")
         expect(span.text()).toBe(message)
       })
 })

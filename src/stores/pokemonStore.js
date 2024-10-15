@@ -42,10 +42,8 @@ export const usePokemonStore = defineStore("pokemonStore", () => {
         } catch (error) {
             error.value = "Get data pokemon failed!"
         } finally {
-            setTimeout(() => {
-                isSkeleton.value = false
-                skeletonCount.value += 21
-            }, 2000);
+            isSkeleton.value = false
+            skeletonCount.value += 21
         }
     }
 

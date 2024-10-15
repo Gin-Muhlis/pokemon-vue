@@ -35,7 +35,7 @@ describe("Card.vue", () => {
     })
 
     // cek gambar pokemon apakah sesuai
-    it('renders pokemon image correctly', () => {
+    it("renders pokemon image correctly", () => {
         const wrapper = mount(Card, {
             props: {
                 pokemon: pokemonMock
@@ -43,16 +43,16 @@ describe("Card.vue", () => {
         })
 
         // Memastikan gambar ditampilkan dengan class animate-spin
-        const imgBall = wrapper.get('.poke-ball')
+        const imgBall = wrapper.get(".poke-ball")
         expect(imgBall.exists()).toBe(true)
 
         // Memastikan handleImagePokemon memanggil gambar yang benar
         const imgPokemon = wrapper.get(".pokemon-image")
-        expect(imgPokemon.attributes('src')).toBe('/images/test-pokemon.png')
+        expect(imgPokemon.attributes("src")).toBe("/images/test-pokemon.png")
     })
 
     // cek apakah button ke halaman detail pokemon sudah benar
-    it('renders the RouterLink correctly', () => {
+    it("renders the RouterLink correctly", () => {
         const wrapper = mount(Card, {
             props: {
                 pokemon: pokemonMock
@@ -66,6 +66,6 @@ describe("Card.vue", () => {
 
         // Memastikan RouterLink mengarah ke halaman detail pokemon
         const routerLink = wrapper.getComponent(RouterLinkStub)
-        expect(routerLink.props('to')).toBe(`/pokemon/${pokemonMock.name}`)
+        expect(routerLink.props("to")).toBe(`/pokemon/${pokemonMock.name}`)
     })
 })
