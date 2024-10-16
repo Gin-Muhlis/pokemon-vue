@@ -11,12 +11,12 @@
                             showNumberPokemon(pokemon.url) }}</span>
 
                     <!-- nama pokemon -->
-                    <p class="pokemon-name text-xl lg:text-2xl font-bold text-slate-950">{{ pokemon.name }}</p>
+                    <p class="pokemon-name text-xl lg:text-2xl font-semibold text-slate-950">{{ handleNamePokemon(pokemon.name) }}</p>
                 </div>
 
                 <!-- gambar pokemon -->
                 <img :src="handleImagePokemon(pokemon.url)" alt="Pokemon Image"
-                    class="pokemon-image w-40 lg:w-40 object-cover z-20 absolute -top-10 -right-1 lg:-right-8 ">
+                    class="pokemon-image w-40 object-cover z-20 absolute -top-10 -right-1 lg:-right-8 ">
             </div>
         </div>
     </RouterLink>
@@ -32,5 +32,5 @@ defineProps({
     }
 })
 
-const { handleImagePokemon, showNumberPokemon } = usePokemon()
+const { handleImagePokemon, showNumberPokemon, handleNamePokemon } = usePokemon()
 </script>
