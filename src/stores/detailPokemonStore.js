@@ -1,6 +1,7 @@
 import Api from "@/api";
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { v4 as uuidv4 } from 'uuid';
 
 export const useDetailPokemonStore = defineStore("detailPokemonStore", () => {
     // inisiasi state
@@ -62,6 +63,7 @@ export const useDetailPokemonStore = defineStore("detailPokemonStore", () => {
 
         // generate data pokemon yang ditangkap
         const dataPokemon = {
+            id: uuidv4(),
             number: String(pokemon.id).padStart(4, "0"),
             name: pokemon.name,
             nickname: nickPokemon.value

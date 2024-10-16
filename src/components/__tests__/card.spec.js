@@ -7,7 +7,8 @@ import { RouterLinkStub } from "@vue/test-utils"
 vi.mock("../../composables/usePokemon.js", () => ({
     usePokemon: () => ({
         handleImagePokemon: vi.fn(() => "/images/test-pokemon.png"),
-        showNumberPokemon: vi.fn(() => "#0001")
+        showNumberPokemon: vi.fn(() => "#0001"),
+        handleNamePokemon: vi.fn(() => "Bulbasaur")
     })
 }))
 

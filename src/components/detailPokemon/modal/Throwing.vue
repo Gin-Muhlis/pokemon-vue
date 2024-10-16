@@ -74,7 +74,7 @@ const modalThrowing = ref(null);
 // fungsi untuk melempar pokeball
 const handleThrowPokeBall = (pokemon) => {
     // ubah status menjadi 'throwing'
-    statusCatch.value = "throwing"
+    store.statusCatch = "throwing"
 
     // Show the modal
     modalThrowing.value.showModal();
