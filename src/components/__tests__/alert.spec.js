@@ -24,15 +24,15 @@ describe("Alert.vue", () => {
           }
         })
     
-        // Memastikan elemen role alert ada
+        // memastikan elemen role alert ada
         const alertDiv = wrapper.get(".alert-error")
         expect(alertDiv.exists()).toBe(true)
     
-        // Memastikan ada svg dengan class yang tepat
+        // memastikan ada svg dengan class yang tepat
         const svg = wrapper.get(".icon-alert")
         expect(svg.exists()).toBe(true)
     
-        // Memastikan teks pesan ada di dalam span
+        // memastikan teks pesan ada di dalam span
         const span = wrapper.get("span")
         expect(span.text()).toBe(message)
       })

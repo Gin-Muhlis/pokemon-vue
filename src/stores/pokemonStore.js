@@ -15,12 +15,14 @@ export const usePokemonStore = defineStore("pokemonStore", () => {
         const response = await Api.get(`/v2/pokemon?limit=${limit.value}`)
 
         pokemonList.value = response.data.results
-
     }
 
     // set inisiasi list pokemon
     function setPokemonList() {
+        // memunculkan loading skeleton
         isSkeleton.value = true
+
+        // mengambil data list pokemon
         try {
             fetchData()
         } catch (error) {
@@ -32,10 +34,13 @@ export const usePokemonStore = defineStore("pokemonStore", () => {
 
     // set pokemon lebih banyak
     const setMorePokemonList = () => {
+        // menambah jumlah limit pokemon yang ditampilkan
         limit.value += 21
 
+        // memunculkan loading skeleton
         isSkeleton.value = true
 
+        // mengambil data lebih banyak pokemon
         try {
             fetchData()
         } catch (error) {

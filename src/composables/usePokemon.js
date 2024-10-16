@@ -15,7 +15,7 @@ export function usePokemon() {
         return id.padStart(4, "0")
     }
 
-    // generate name pokemon
+    // generate nama pokemon
     const handleNamePokemon = (name) => {
         return name.charAt(0).toUpperCase() + name.slice(1)
     }

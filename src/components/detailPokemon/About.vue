@@ -57,10 +57,10 @@
 <script setup>
 import { usePokemon } from "../../composables/usePokemon.js"
 
+// memecah fungsi dri usePokemon
 const { generateColorTypePokemon, typeColors } = usePokemon()
 
-
-
+// mendifinisikan props
 defineProps({
     pokemon: {
         type: Object,

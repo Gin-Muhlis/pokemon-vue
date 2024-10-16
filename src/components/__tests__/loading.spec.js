@@ -8,16 +8,16 @@ describe("Loading.vue", () => {
     it("renders loading spinner and text correctly", () => {
         const wrapper = mount(Loading)
 
-        // Memastikan div container dengan class yang benar
+        // memastikan div container dengan class yang benar
         const containerDiv = wrapper.get(".loading-com")
         expect(containerDiv.exists()).toBe(true)
 
-        // Memastikan gambar ditampilkan dengan class animate-spin
+        // memastikan gambar ditampilkan dengan class animate-spin
         const img = wrapper.get(".poke-ball")
         expect(img.exists()).toBe(true)
         expect(img.classes()).toContain("animate-spin")
 
-        // Memastikan teks "Loading" ditampilkan
+        // memastikan teks "Loading" ditampilkan
         const span = wrapper.get("span")
         expect(span.text()).toBe("Loading")
     })

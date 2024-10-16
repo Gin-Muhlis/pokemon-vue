@@ -25,6 +25,7 @@
 <script setup>
 import { usePokemon } from "../composables/usePokemon.js"
 
+// mendifinisikan props
 defineProps({
     pokemon: {
         type: Object,
@@ -32,5 +33,6 @@ defineProps({
     }
 })
 
+// memecah fungsi yang ada di usePokemon
 const { handleImagePokemon, showNumberPokemon, handleNamePokemon } = usePokemon()
 </script>

@@ -8,19 +8,19 @@ describe('SkeletonCard.vue', () => {
     it('renders the skeleton card layout correctly', () => {
         const wrapper = mount(SkeletonCard)
 
-        // Memastikan container utama memiliki class yang sesuai
+        // memastikan container utama memiliki class yang sesuai
         const containerDiv = wrapper.get('div.w-full.rounded-xl.bg-white.px-8.py-3.h-32.flex.relative.items-center.justify-between.gap-1')
         expect(containerDiv.exists()).toBe(true)
 
-        // Memastikan gambar pokeball yang diatas card muncul
+        // memastikan gambar pokeball yang diatas card muncul
         const firstImage = wrapper.get('.poke-ball-top')
         expect(firstImage.exists()).toBe(true)
 
-        // Memastikan dua elemen skeleton dengan animasi pulse
+        // memastikan dua elemen skeleton dengan animasi pulse
         const skeletonDivs = wrapper.findAll('div.animate-pulse')
         expect(skeletonDivs.length).toBe(2)
 
-        // Memastikan gambar pokeball spin muncul
+        // memastikan gambar pokeball spin muncul
         const secondImage = wrapper.get('.poke-ball-spin')
         expect(secondImage.exists()).toBe(true)
         expect(secondImage.classes()).toContain('animate-spin')

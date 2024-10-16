@@ -3,7 +3,7 @@ import { mount } from "@vue/test-utils"
 import Card from "../Card.vue"
 import { RouterLinkStub } from "@vue/test-utils"
 
-// Mock fungsi dari usePokemon
+// mock fungsi dari usePokemon
 vi.mock("../../composables/usePokemon.js", () => ({
     usePokemon: () => ({
         handleImagePokemon: vi.fn(() => "/images/test-pokemon.png"),
@@ -25,11 +25,11 @@ describe("Card.vue", () => {
             }
         })
 
-        // Memastikan nama Pokémon ditampilkan dengan benar
+        // memastikan nama Pokémon ditampilkan dengan benar
         const nameElement = wrapper.find(".pokemon-name")
         expect(nameElement.text()).toContain(pokemonMock.name)
 
-        // Memastikan nomor Pokémon ditampilkan dengan benar dari showNumberPokemon
+        // memastikan nomor Pokémon ditampilkan dengan benar dari showNumberPokemon
         const numberElement = wrapper.find(".pokemon-number")
         expect(numberElement.text()).toContain("#0001")
     })
@@ -42,11 +42,11 @@ describe("Card.vue", () => {
             }
         })
 
-        // Memastikan gambar ditampilkan dengan class animate-spin
+        // memastikan gambar ditampilkan dengan class animate-spin
         const imgBall = wrapper.get(".poke-ball")
         expect(imgBall.exists()).toBe(true)
 
-        // Memastikan handleImagePokemon memanggil gambar yang benar
+        // memastikan handleImagePokemon memanggil gambar yang benar
         const imgPokemon = wrapper.get(".pokemon-image")
         expect(imgPokemon.attributes("src")).toBe("/images/test-pokemon.png")
     })
@@ -64,7 +64,7 @@ describe("Card.vue", () => {
             }
         })
 
-        // Memastikan RouterLink mengarah ke halaman detail pokemon
+        // memastikan RouterLink mengarah ke halaman detail pokemon
         const routerLink = wrapper.getComponent(RouterLinkStub)
         expect(routerLink.props("to")).toBe(`/pokemon/${pokemonMock.name}`)
     })

@@ -3,7 +3,7 @@
         <!-- error -->
         <Alert v-if="store.error" :message="store.error" />
 
-        <!-- Loading -->
+        <!-- loading -->
         <Loading v-else-if="store.isLoading" />
 
         <!-- data pokemon -->
@@ -23,10 +23,7 @@
                     class="pokemon-image w-56 object-cover z-20 mb-7">
 
                 <!-- button tangkap pokemon -->
-                <button class="btn btn-md bg-white flex items-center justify-center gap-2 hover:bg-sky-400">
-                    <img src="/images/pokeball2.png" alt="Poke ball" class="w-7 object-cover animate-bounce">
-                    <span>Catch {{ store.pokemonDetail.name }}</span>
-                </button>
+                <Throwing :pokemon="store.pokemonDetail" />
 
             </div>
 
@@ -55,6 +52,7 @@ import Stats from "../components/detailPokemon/Stats.vue"
 import Moves from "../components/detailPokemon/Moves.vue"
 import Loading from "../components/Loading.vue"
 import TabButton from "../components/detailPokemon/TabButton.vue"
+import Throwing from "../components/detailPokemon/modal/Throwing.vue"
 import Alert from "../components/Alert.vue"
 import { useDetailPokemonStore } from "../stores/detailPokemonStore.js"
 import { useRoute } from "vue-router"
@@ -66,9 +64,10 @@ const store = useDetailPokemonStore()
 
 const { handleNamePokemon, handleDetailImagePokemon } = usePokemon()
 
+// get data detail pokemon
 onMounted(() => {
     store.setDetailPokemon(route.params.name)
-
+    store.tab = "About"
 })
 
 
