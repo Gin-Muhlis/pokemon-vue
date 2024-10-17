@@ -10,7 +10,12 @@ const routes = [
         path: '/pokemon/:name',
         name: 'pokemon-detail',
         component: () => import('../views/Detail-Pokemon.vue')
-    }
+    },
+    {
+        path: '/mypokemon',
+        name: 'mypokemon',
+        component: () => import('../views/Catched.vue')
+    },
 ];
 
 const router = createRouter({

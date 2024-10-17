@@ -1,29 +1,48 @@
 <template>
     <div class="w-full px-5 lg:px-24 pt-12 pb-5">
         <!-- error -->
-        <Alert v-if="store.error" :message="store.error" />
+        <Alert v-if="detailPokemonStore.error" :message="detailPokemonStore.error" />
 
         <!-- loading -->
-        <Loading v-else-if="store.isLoading" />
+        <Loading v-else-if="detailPokemonStore.isLoading" />
 
         <!-- data pokemon -->
-        <div v-else-if="!store.isLoading && store.pokemonDetail"
+        <div v-else-if="!detailPokemonStore.isLoading && detailPokemonStore.pokemonDetail"
             class="grid grid-cols-1 lg:grid-cols-2 items-center justify-between gap-16">
             <div class="flex flex-col items-center justify-center">
                 <!-- number pokemon -->
                 <p class="poke-number font-semibold mb-2">
-                    #{{ String(store.pokemonDetail.id).padStart(4, "0") }}
+                    #{{ String(detailPokemonStore.pokemonDetail.id).padStart(4, "0") }}
                 </p>
 
                 <!-- nama pokemon -->
-                <h1 class="text-2xl font-bold mb-5">{{ handleNamePokemon(store.pokemonDetail.name) }}</h1>
+                <div class=" mb-5 flex items-center justify-center gap-2">
+                    <div v-if="catchedPokemonStore.isCatchedPokemon(String(detailPokemonStore.pokemonDetail.id).padStart(4, '0'))" class="relative">
+                        <!-- logo poke ball ketika pokemon sudah penah ditangkap -->
+                        <img src="/images/pokeball1.png" alt="Poke ball catched" class="w-6 object-cover">
+
+                        <!-- teks untuk menunjukkan bahwa pokemon sudah ditangkap -->
+                        <div class="bg-slate-700 text-white px-2 py-1 rounded absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs after:">
+                            <span>Owned</span>
+                            <!-- Segitiga -->
+                            <div class="after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:-top-2
+                after:border-4 after:border-transparent after:border-b-slate-700">
+                            </div>
+                        </div>
+
+                    </div>
+                    <h1 class="text-2xl font-bold">
+                        {{ handleNamePokemon(detailPokemonStore.pokemonDetail.name) }}
+                    </h1>
+                </div>
+
 
                 <!-- gambar pokemon -->
-                <img :src="handleDetailImagePokemon(store.pokemonDetail.sprites)" alt="Pokemon"
+                <img :src="handleDetailImagePokemon(detailPokemonStore.pokemonDetail.sprites)" alt="Pokemon"
                     class="pokemon-image w-56 object-cover z-20 mb-7">
 
                 <!-- button tangkap pokemon -->
-                <Throwing :pokemon="store.pokemonDetail" />
+                <Throwing :pokemon="detailPokemonStore.pokemonDetail" />
 
             </div>
 
@@ -35,9 +54,9 @@
                     <TabButton name="Moves" />
                 </div>
                 <div class="card-body flex-1 overflow-hidden">
-                    <About v-if="store.tab === 'About'" :pokemon="store.pokemonDetail" />
-                    <Stats v-if="store.tab === 'Stats'" :pokemon="store.pokemonDetail" />
-                    <Moves v-if="store.tab === 'Moves'" :pokemon="store.pokemonDetail" />
+                    <About v-if="detailPokemonStore.tab === 'About'" :pokemon="detailPokemonStore.pokemonDetail" />
+                    <Stats v-if="detailPokemonStore.tab === 'Stats'" :pokemon="detailPokemonStore.pokemonDetail" />
+                    <Moves v-if="detailPokemonStore.tab === 'Moves'" :pokemon="detailPokemonStore.pokemonDetail" />
                 </div>
             </div>
         </div>
@@ -54,21 +73,25 @@ import Loading from "../components/Loading.vue"
 import TabButton from "../components/detailPokemon/TabButton.vue"
 import Throwing from "../components/detailPokemon/modal/Throwing.vue"
 import Alert from "../components/Alert.vue"
+
 import { useDetailPokemonStore } from "../stores/detailPokemonStore.js"
 import { useRoute } from "vue-router"
 import { onMounted } from "vue"
 import { usePokemon } from "../composables/usePokemon.js"
+import { useCatchedPokemonStore } from "@/stores/catchedPokemonStore"
 
 const route = useRoute()
-const store = useDetailPokemonStore()
+const detailPokemonStore = useDetailPokemonStore()
+const catchedPokemonStore = useCatchedPokemonStore()
 
-const { handleNamePokemon, handleDetailImagePokemon } = usePokemon()
-
-// get data detail pokemon
 onMounted(() => {
-    store.setDetailPokemon(route.params.name)
-    store.tab = "About"
+    // get data detail pokemon 
+
+    detailPokemonStore.setDetailPokemon(route.params.name)
+    detailPokemonStore.tab = "About"
+
 })
 
+const { handleNamePokemon, handleDetailImagePokemon } = usePokemon()
 
 </script>

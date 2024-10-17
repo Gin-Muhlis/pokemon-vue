@@ -6,13 +6,30 @@
         </RouterLink>
 
         <!-- Button untuk ke page catch -->
-        <button class="btn bg-white flex items-center justify-center gap-2 btn-sm border-none transition-all duration-300 hover:bg-sky-400">
-            <p class="font-semibold text-sm">0 Catch</p>
-            <img src="/images/pokeball2.png" alt="Poke Ball" class="icon-pokeball w-4 object-cover">
-        </button>
+        <RouterLink to="/mypokemon">
+            <button
+                class="btn bg-white flex items-center justify-center gap-2 btn-sm border-none transition-all duration-300 hover:bg-sky-400">
+                <p class="font-semibold text-sm">{{ countCatched }} Catch</p>
+                <img src="/images/pokeball2.png" alt="Poke Ball" class="icon-pokeball w-4 object-cover">
+            </button>
+        </RouterLink>
+
+
     </div>
 </template>
 
 <script setup>
+import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
+import { useCatchedPokemonStore } from "../stores/catchedPokemonStore.js"
+
+const store = useCatchedPokemonStore()
+
+const { countCatched } = storeToRefs(store)
+
+onMounted(() => {
+    
+    store.setCountCatchedPokemon()
+})
 
 </script>

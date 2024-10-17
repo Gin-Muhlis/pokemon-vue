@@ -66,7 +66,8 @@ export const useDetailPokemonStore = defineStore("detailPokemonStore", () => {
             id: uuidv4(),
             number: String(pokemon.id).padStart(4, "0"),
             name: pokemon.name,
-            nickname: nickPokemon.value
+            nickname: nickPokemon.value,
+            image: pokemon.sprites.other['official-artwork'].front_default
         }
 
         // simpan data pokemon ke local storage
@@ -89,7 +90,9 @@ export const useDetailPokemonStore = defineStore("detailPokemonStore", () => {
 
         // ubah status menjadi tertangkap
         statusCatch.value = "catched"
-
+        setTimeout(() => {
+            window.location.href = "/mypokemon"
+        }, 1000)
     }
 
     return {
