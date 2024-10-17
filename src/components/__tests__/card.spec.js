@@ -7,8 +7,16 @@ import { createPinia, setActivePinia } from 'pinia';
 // Mock store Pinia
 vi.mock('../stores/catchedPokemonStore.js');
 
+// Mock RouterLink
+vi.mock('vue-router', () => ({
+    RouterLink: {
+        template: '<a><slot /></a>'
+    }
+}));
+
 describe('CardPokemon.vue', () => {
     let store;
+
     const dataProps = {
         id: '1',
         name: 'Pikachu',
@@ -21,17 +29,26 @@ describe('CardPokemon.vue', () => {
     beforeEach(() => {
         const pinia = createPinia();
         setActivePinia(pinia);
-
+    
         // Inisialisasi mock store sebelum setiap test
         store = useCatchedPokemonStore();
         store.isCatchedPokemon = vi.fn().mockReturnValue(false);
         store.deleteCatchedPokemon = vi.fn();
+    
     });
+    
 
     // cek card apakah merender props dengan benar
     it('renders Pokemon card with props', () => {
         const wrapper = mount(CardPokemon, {
-            props: dataProps,
+            props: dataProps,  
+            global: {
+                stubs: {
+                    RouterLink: {
+                        template: '<a><slot /></a>', // Stub dengan template yang memungkinkan rendering slot dalamnya
+                    },
+                },
+            },
         });
 
         expect(wrapper.find('.pokemon-number').text()).toBe('0001');
@@ -44,9 +61,14 @@ describe('CardPokemon.vue', () => {
     it('shows delete button when isDelete is true', () => {
         dataProps.isDelete = true
         const wrapper = mount(CardPokemon, {
-            props: dataProps
-        });
+            props: dataProps,
+            global: {
+                stubs: {
+                    RouterLink: true, // Stub untuk RouterLink
+                },
+            },
 
+        });
         const deleteButton = wrapper.find('button');
         expect(deleteButton.exists()).toBe(true);
     });
@@ -56,6 +78,11 @@ describe('CardPokemon.vue', () => {
         dataProps.isDelete = true
         const wrapper = mount(CardPokemon, {
             props: dataProps,
+            global: {
+                stubs: {
+                    RouterLink: true, // Stub untuk RouterLink
+                },
+            },
         });
 
         const deleteButton = wrapper.find('button');
@@ -71,6 +98,11 @@ describe('CardPokemon.vue', () => {
 
         const wrapper = mount(CardPokemon, {
             props: dataProps,
+            global: {
+                stubs: {
+                    RouterLink: true, // Stub untuk RouterLink
+                },
+            },
         });
 
         const pokeBallImage = wrapper.find('.pokeball-catched');
@@ -85,6 +117,11 @@ describe('CardPokemon.vue', () => {
                 image: '/images/pikachu.png',
                 number: '025',
                 isDelete: false,
+            },
+            global: {
+                stubs: {
+                    RouterLink: true, // Stub untuk RouterLink
+                },
             },
         });
 

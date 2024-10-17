@@ -10,8 +10,6 @@ describe("Navbar.vue", () => {
     let wrapper;
 
     beforeEach(() => {
-        
-
         wrapper = mount(Navbar, {
             global: {
                 plugins: [
