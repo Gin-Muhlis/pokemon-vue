@@ -6,7 +6,7 @@
 
             <div v-for="type in pokemon.types" :key="type.slot"
                 :class="[typeColors[type.type.name], 'py-1', 'px-2', 'rounded']">
-                <p class="text-xs text-white">{{ type.type.name }}</p>
+                <p class="text-xs text-white value-type">{{ type.type.name }}</p>
             </div>
         </div>
 
@@ -14,14 +14,14 @@
         <div class="flex items-start justify-start gap-3 w-full">
             <KeyAbout name="Height" />
             
-            <p class="text-sm">{{ pokemon.height }} (m)</p>
+            <p class="text-sm value-height">{{ pokemon.height }} (m)</p>
         </div>
 
         <!-- weight pokemon -->
         <div class="flex items-start justify-start gap-3 w-full">
             <KeyAbout name="Weight" />
 
-            <p class="text-sm">{{ pokemon.weight }} (kg)</p>
+            <p class="text-sm value-weight">{{ pokemon.weight }} (kg)</p>
         </div>
 
         <!-- abilities pokemon -->
@@ -33,7 +33,7 @@
                     class="flex items-center justify-start gap-2">
                     <img src="/images/pokeball1.png" alt="Poke ball" class="w-4 grayscale">
                     <div class="px-2 py-1 rounded bg-sky-300">
-                        <p class="text-xs">{{ ability.ability.name }}</p>
+                        <p class="text-xs value-abilities">{{ ability.ability.name }}</p>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
         <!-- exp pokemon -->
         <div class="flex items-start justify-start gap-3 w-full">
             <KeyAbout name="Experience" />
-            <p class="text-sm">{{ pokemon.base_experience }} (xp)</p>
+            <p class="text-sm value-exp">{{ pokemon.base_experience }} (xp)</p>
         </div>
     </div>
 </template>
