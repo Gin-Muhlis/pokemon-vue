@@ -1,7 +1,7 @@
 describe('Home Page Tests', () => {
     beforeEach(() => {
         // Mengunjungi halaman home
-        cy.visit(`/pokemon/${pokemonName}`);
+        cy.visit('/');
     });
 
     // cek list pokemon sudah muncul dengan benar

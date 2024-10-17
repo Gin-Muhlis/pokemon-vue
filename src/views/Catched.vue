@@ -2,8 +2,8 @@
     <div class="w-full px-5 lg:px-24 pb-5">
         <div class="w-full flex items-center justify-end mb-20">
             <div role="tablist" class="tabs tabs-boxed p-2">
-                <a role="tab" :class="`tab ${tab == 'Catched' ? 'bg-sky-400' : ''}`" @click="store.changeTab('Catched')">Catched</a>
-                <a role="tab" :class="`tab ${tab == 'History' ? 'bg-sky-400' : ''}`" @click="store.changeTab('History')">History</a>
+                <a role="tab" :class="`tab tab-catched ${tab == 'Catched' ? 'bg-sky-400' : ''}`" @click="store.changeTab('Catched')">Catched</a>
+                <a role="tab" :class="`tab tab-history ${tab == 'History' ? 'bg-sky-400' : ''}`" @click="store.changeTab('History')">History</a>
             </div>
         </div>
         <div class="w-full">

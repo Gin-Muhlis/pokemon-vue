@@ -53,23 +53,22 @@ describe("Navbar.vue", () => {
     });
 
     it("calls setCountCatchedPokemon when mounted", async () => {
-      // Siapkan local storage dengan data yang diperlukan
-    localStorage.setItem("data", JSON.stringify({
-        catched: [{ id: 1, name: 'Pikachu', number: 1 }],
-        history: []
-    }));
+        localStorage.setItem("data", JSON.stringify({
+            catched: [{ id: 1, name: 'Pikachu', number: 1 }],
+            history: []
+        }));
 
-    const store = useCatchedPokemonStore();
-    const setCountSpy = vi.spyOn(store, "setCountCatchedPokemon");
+        const store = useCatchedPokemonStore();
+        const setCountSpy = vi.spyOn(store, "setCountCatchedPokemon");
 
-    // Mount komponen
-    const wrapper = mount(Navbar); // Pastikan ini adalah komponen yang benar
+        // Mount komponen
+        const wrapper = mount(Navbar);
 
-    // Tunggu hingga promise dalam mounted selesai
-    await wrapper.vm.$nextTick(); 
+        // Tunggu hingga promise dalam mounted selesai
+        await wrapper.vm.$nextTick();
 
-    // Pastikan spy dipanggil
-    expect(setCountSpy).toHaveBeenCalled(); 
-        
+        // Pastikan spy dipanggil
+        expect(setCountSpy).toHaveBeenCalled();
+
     });
 });

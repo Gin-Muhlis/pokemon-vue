@@ -28,7 +28,7 @@
 
                 <!-- gambar pokemon -->
                 <img :src="image" alt="Pokemon Image"
-                    class="pokemon-image w-44 object-cover z-20 absolute -top-10 -right-1 lg:-right-8 ">
+                    class="pokemon-image w-40 object-cover z-20 absolute -top-10 -right-1 lg:-right-8 ">
             </div>
         </RouterLink>
     </div>

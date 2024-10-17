@@ -45,7 +45,7 @@ describe('CardPokemon.vue', () => {
             global: {
                 stubs: {
                     RouterLink: {
-                        template: '<a><slot /></a>', // Stub dengan template yang memungkinkan rendering slot dalamnya
+                        template: '<a><slot /></a>', 
                     },
                 },
             },
