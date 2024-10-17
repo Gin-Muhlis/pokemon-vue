@@ -8,7 +8,7 @@ export function usePokemon() {
     }
 
     // generate nomor pokemon
-    const showNumberPokemon = (urlPokemon) => {
+    const handleNumberPokemon = (urlPokemon) => {
         const segments = urlPokemon.split('/');
         const id = String(segments[segments.length - 2]);
 
@@ -49,12 +49,9 @@ export function usePokemon() {
 
     return {
         handleImagePokemon,
-        showNumberPokemon,
+        handleNumberPokemon,
         handleNamePokemon,
         handleDetailImagePokemon,
         typeColors
     }
-
-
-
 }

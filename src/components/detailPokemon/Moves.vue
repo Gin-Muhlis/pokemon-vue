@@ -8,10 +8,7 @@
 </template>
 
 <script setup>
-import { usePokemon } from "../../composables/usePokemon.js"
 
-// mendifinisikan props
-const { generateColorTypePokemon } = usePokemon()
 defineProps({
     pokemon: {
         type: Object,

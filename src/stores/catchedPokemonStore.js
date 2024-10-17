@@ -14,6 +14,7 @@ export const useCatchedPokemonStore = defineStore("catchedPokemonStore", () => {
     const setListCatchedPokemon = () => {
         isLoading.value = true
 
+        // ambil data ke local storage
         try {
             let data = localStorage.getItem("data")
 
@@ -26,7 +27,6 @@ export const useCatchedPokemonStore = defineStore("catchedPokemonStore", () => {
             }
         } catch (error) {
             error.value = "Get data pokemon failed!"
-            console.error(error)
         } finally {
             isLoading.value = false
         }
@@ -36,16 +36,15 @@ export const useCatchedPokemonStore = defineStore("catchedPokemonStore", () => {
     const setCountCatchedPokemon = () => {
         let data = localStorage.getItem("data")
 
+        // menghitung jumlah pokemon yang ditangkap
         try {
             if (data) {
                 data = JSON.parse(data)
 
                 countCatched.value = data.catched.length
-
             }
         } catch (error) {
             error.value = "Get data pokemon failed!"
-            console.error(error)
         } finally {
             isLoading.value = false
         }
@@ -59,7 +58,8 @@ export const useCatchedPokemonStore = defineStore("catchedPokemonStore", () => {
     // delete pokemon
     const deleteCatchedPokemon = (id) => {
         let data = localStorage.getItem("data")
-        console.log('delete')
+
+        // menghapus data pokemon
         if (data) {
             data = JSON.parse(data)
 
@@ -67,12 +67,15 @@ export const useCatchedPokemonStore = defineStore("catchedPokemonStore", () => {
 
             localStorage.setItem("data", JSON.stringify(data))
             listCatched.value = listCatched.value.filter(pokemon => pokemon.id != id)
+            countCatched.value`` -= 1
         }
     }
 
     // cek apakah pokemon telah ditangkap
     const isCatchedPokemon = (numberPokemon) => {
         let data = localStorage.getItem("data")
+
+        // mengecek apakah token telah ditangkap atau belum
         try {
             if (data) {
                 data = JSON.parse(data)

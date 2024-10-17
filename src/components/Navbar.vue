@@ -27,8 +27,7 @@ const store = useCatchedPokemonStore()
 
 const { countCatched } = storeToRefs(store)
 
-onMounted(() => {
-    
+onMounted(() => {  
     store.setCountCatchedPokemon()
 })
 

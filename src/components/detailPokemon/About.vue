@@ -2,9 +2,7 @@
     <div class="flex flex-col items-start justify-start gap-4 px-3">
         <!-- tipe pokemon -->
         <div class="flex items-start justify-start gap-3 w-full">
-            <div class="basis-1/4">
-                <p class="font-semibold text-sm w-full">Type</p>
-            </div>
+            <KeyAbout name="Type" />
 
             <div v-for="type in pokemon.types" :key="type.slot"
                 :class="[typeColors[type.type.name], 'py-1', 'px-2', 'rounded']">
@@ -14,25 +12,22 @@
 
         <!-- height pokemon -->
         <div class="flex items-start justify-start gap-3 w-full">
-            <div class="basis-1/4">
-                <p class="font-semibold text-sm w-full">Height</p>
-            </div>
+            <KeyAbout name="Height" />
+            
             <p class="text-sm">{{ pokemon.height }} (m)</p>
         </div>
 
         <!-- weight pokemon -->
         <div class="flex items-start justify-start gap-3 w-full">
-            <div class="basis-1/4">
-                <p class="font-semibold text-sm w-full">Weight</p>
-            </div>
+            <KeyAbout name="Weight" />
+
             <p class="text-sm">{{ pokemon.weight }} (kg)</p>
         </div>
 
         <!-- abilities pokemon -->
         <div class="flex items-start justify-start gap-3 w-full">
-            <div class="basis-1/4">
-                <p class="font-semibold text-sm w-full">Abilities</p>
-            </div>
+            <KeyAbout name="Abilities" />
+
             <div class="flex flex-col items-start justify-start gap-3">
                 <div v-for="ability in pokemon.abilities" :key="ability.slot"
                     class="flex items-center justify-start gap-2">
@@ -46,15 +41,14 @@
 
         <!-- exp pokemon -->
         <div class="flex items-start justify-start gap-3 w-full">
-            <div class="basis-1/4">
-                <p class="font-semibold text-sm w-full">Experince</p>
-            </div>
+            <KeyAbout name="Experience" />
             <p class="text-sm">{{ pokemon.base_experience }} (xp)</p>
         </div>
     </div>
 </template>
 
 <script setup>
+import KeyAbout from "./KeyAbout.vue";
 import { usePokemon } from "../../composables/usePokemon.js"
 
 // memecah fungsi dri usePokemon

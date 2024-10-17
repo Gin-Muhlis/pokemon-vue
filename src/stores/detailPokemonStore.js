@@ -90,6 +90,8 @@ export const useDetailPokemonStore = defineStore("detailPokemonStore", () => {
 
         // ubah status menjadi tertangkap
         statusCatch.value = "catched"
+
+        // redirect ke halaman my pokemon   
         setTimeout(() => {
             window.location.href = "/mypokemon"
         }, 1000)

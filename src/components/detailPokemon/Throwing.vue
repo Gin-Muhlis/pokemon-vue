@@ -3,36 +3,36 @@
     <button class="btn btn-md bg-white flex items-center justify-center gap-2 hover:bg-sky-400"
         @click="handleThrowPokeBall(pokemon)">
         <img src="/images/pokeball2.png" alt="Poke ball" class="w-7 object-cover animate-bounce">
-        <span>Catch {{ store.pokemonDetail.name }}</span>
+        <span>Catch {{ pokemonDetail.name }}</span>
     </button>
 
     <dialog ref="modalThrowing" id="my_modal_1" class="modal">
         <div class="modal-box">
             <!-- ketika melempar pokeball -->
-            <div v-if="store.statusCatch == 'throwing'" class="flex items-center justify-center flex-col gap-5">
+            <div v-if="statusCatch == 'throwing'" class="flex items-center justify-center flex-col gap-5">
                 <img src="/images/pokeball2.png" alt="Poke ball" class="w-16 object cover animate-spin">
                 <p class="font-bold text-lg">Throwing Pokeball...</p>
             </div>
 
             <!-- ketika pokemon tidak tertangkap -->
-            <div v-if="store.statusCatch == 'run'" class="flex items-center justify-center flex-col gap-5">
+            <div v-if="statusCatch == 'run'" class="flex items-center justify-center flex-col gap-5">
                 <img src="/images/pokeball2.png" alt="Poke ball" class="w-16 object cover animate-bounce">
                 <p class="font-bold text-lg">Oops {{ handleNamePokemon(pokemon.name) }} run...</p>
             </div>
 
             <!-- ketika berhasil menangkap pokemon -->
-            <div v-if="store.statusCatch == 'catching'" class="flex items-center justify-center flex-col">
+            <div v-if="statusCatch == 'catching'" class="flex items-center justify-center flex-col">
                 <p class="font-semibold text-lg mb-7">Wow you catch {{ handleNamePokemon(pokemon.name) }}...</p>
                 <p class="font-semibold text-lg mb-2">Give a Wild {{ handleNamePokemon(pokemon.name) }} Nickname</p>
 
                 <div class="mb-7 w-full flex items-center justify-center flex-col">
                     <!-- input nickname pokemon -->
-                    <input v-model="store.nickPokemon" type="text" placeholder="Your pokemon name..."
+                    <input v-model="nickPokemon" type="text" placeholder="Your pokemon name..."
                         class="input input-bordered w-full  max-w-xs mb-2 input-md" />
 
                     <!-- error ketika nickname pokemon tidak diisi -->
-                    <p v-if="store.errorInputNickname" class="text-sm text-red-500 font-semibold">{{
-                        store.errorInputNickname }}</p>
+                    <p v-if="errorInputNickname" class="text-sm text-red-500 font-semibold">{{
+                        errorInputNickname }}</p>
                 </div>
                 <div class="w-full flex items-center justify-center gap-3">
                     <!-- button untuk melepaskan pokemon yang ditangkap -->
@@ -60,12 +60,16 @@
 </template>
 
 <script setup>
-import { useDetailPokemonStore } from "../../../stores/detailPokemonStore.js"
+import { useDetailPokemonStore } from "../../stores/detailPokemonStore.js"
 import { ref } from "vue"
 import { storeToRefs } from 'pinia'
-import { usePokemon } from "../../../composables/usePokemon.js"
+import { usePokemon } from "../../composables/usePokemon.js"
 
+// inisitasi state dan destrukturing state
 const store = useDetailPokemonStore()
+const {pokemonDetail, statusCatch, nickPokemon, errorInputNickname} = storeToRefs(store)
+
+// get helper function
 const { handleNamePokemon } = usePokemon()
 
 // Create a ref to access the modal element

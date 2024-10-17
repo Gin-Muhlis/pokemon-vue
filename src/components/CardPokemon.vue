@@ -4,11 +4,12 @@
         class="group max-w-full sm:max-w-96 card bg-white w-full shadow-lg relative transition-all duration-300 hover:-translate-y-3">
         <button 
             v-if="isDelete"
-            @click="store.deleteCatchedPokemon(id)"
+            @click="catchedPokemonStore.deleteCatchedPokemon(id)"
             class="z-50 flex items-center justify-center absolute top-3 left-3 bg-red-500 w-5 h-5 rounded-full">
             
             <img src="/images/x.png" alt="X Image" class="x-delete w-4 object-cover">
         </button>
+        <img v-if="catchedPokemonStore.isCatchedPokemon(number)" src="/images/pokeball1.png" alt="Poke ball left image" class="w-5 object cover absolute left-3 top-3">
         <img src="/images/pokeball2.png" alt="Poke Ball Image"
             class="poke-ball w-24 object-cover grayscale opacity-20 absolute -top-10 -right-0 lg:-right-7 z-10 -scale-x-100">
         <RouterLink :to="`/pokemon/${name}`">
@@ -16,7 +17,7 @@
                 <div class="flex flex-col items-start justify-start gap-1 relative z-20">
                     <!-- no pokemon -->
                     <span
-                        class="pokemon-number font-semibold text-sm text-slate-900 transition-all duration-300 group-hover:text-sky-400">#{{
+                        class="pokemon-number font-semibold text-sm text-slate-900 transition-all duration-300 group-hover:text-sky-400">{{
                             number }}</span>
 
                     <!-- nama pokemon -->
@@ -35,15 +36,20 @@
 </template>
 
 <script setup>
-import { usePokemon } from "../../composables/usePokemon.js"
-import { useCatchedPokemonStore } from "../../stores/catchedPokemonStore.js"
+import { usePokemon } from "../composables/usePokemon.js"
+import { useCatchedPokemonStore } from "../stores/catchedPokemonStore.js"
 
-const store = useCatchedPokemonStore()
+const catchedPokemonStore = useCatchedPokemonStore()
+
+// memecah fungsi yang ada di usePokemon
+const { handleNamePokemon } = usePokemon()
+
 // mendifinisikan props
 defineProps({
     id: {
         type: String,
-        required: true
+        required: false,
+        default: ""
     },
     name: {
         type: String,
@@ -55,7 +61,8 @@ defineProps({
     },
     nickname: {
         type: String,
-        required: false
+        required: false,
+        default: ""
     },
     number: {
         type: String,
@@ -63,10 +70,9 @@ defineProps({
     },
     isDelete: {
         type: Boolean,
-        required: true
+        required: false,
+        default: false
     }
 })
 
-// memecah fungsi yang ada di usePokemon
-const { handleNamePokemon } = usePokemon()
 </script>
