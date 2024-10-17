@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
 import Stats from '../detailPokemon/Stats.vue'; // Sesuaikan dengan path yang benar
 import ProgressStat from '../detailPokemon/ProgressStat.vue'; // Sesuaikan dengan path yang benar
