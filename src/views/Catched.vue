@@ -8,12 +8,12 @@
         </div>
         <div class="w-full">
             <!-- daftar pokemon yang telah ditangkap -->
-            <div v-if="tab == 'Catched'" class="flex items-start justify-start flex-wrap gap-16 mb-16">
+            <div v-if="tab == 'Catched'" class="list-catched flex items-start justify-start flex-wrap gap-16 mb-16">
                 <CardPokemon v-for="pokemon in listCatched" :key="pokemon.id" :name="pokemon.name" :id="pokemon.id" :image="pokemon.image" :nickname="pokemon.nickname" :number="pokemon.number" :is-delete="true" />
             </div>
 
             <!-- daftar history pokemon yang ditangkap -->
-            <div v-if="tab == 'History'" class="flex items-start justify-start flex-wrap gap-16 mb-16">
+            <div v-if="tab == 'History'" class="list-history flex items-start justify-start flex-wrap gap-16 mb-16">
                 <CardPokemon v-for="pokemon in listHistory" :key="pokemon.id" :name="pokemon.name" :id="pokemon.id" :image="pokemon.image" :nickname="pokemon.nickname" :number="pokemon.number" :is-delete="false" />
             </div>
         </div>

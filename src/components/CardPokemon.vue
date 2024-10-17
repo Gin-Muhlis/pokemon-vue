@@ -1,7 +1,7 @@
 <template>
 
     <div
-        class="group max-w-full sm:max-w-96 card bg-white w-full shadow-lg relative transition-all duration-300 hover:-translate-y-3">
+        class="card-pokemon group max-w-full sm:max-w-96 card bg-white w-full shadow-lg relative transition-all duration-300 hover:-translate-y-3">
         <button 
             v-if="isDelete"
             @click="catchedPokemonStore.deleteCatchedPokemon(id)"

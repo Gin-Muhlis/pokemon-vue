@@ -1,6 +1,6 @@
 <template>
     <!-- button untuk melempar pokeball -->
-    <button class="btn btn-md bg-white flex items-center justify-center gap-2 hover:bg-sky-400"
+    <button class="btn btn-md bg-white flex items-center justify-center gap-2 hover:bg-sky-400 btn-throwing"
         @click="handleThrowPokeBall(pokemon)">
         <img src="/images/pokeball2.png" alt="Poke ball" class="w-7 object-cover animate-bounce">
         <span>Catch {{ pokemonDetail.name }}</span>

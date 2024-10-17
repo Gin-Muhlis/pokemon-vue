@@ -1,6 +1,6 @@
 <template>
     <div
-        class="skeleton-card w-full rounded-xl bg-white px-8 py-3 h-32 flex relative items-center justify-between gap-1">
+        class="skeleton w-full rounded-xl bg-white px-8 py-3 h-32 flex relative items-center justify-between gap-1">
         <!-- gambar poke ball top -->
         <img src="/images/pokeball2.png" alt="Poke ball image"
             class="poke-ball-top w-24 object-cover grayscale opacity-20 absolute -top-10 -right-0 lg:-right-7 z-10 -scale-x-100">

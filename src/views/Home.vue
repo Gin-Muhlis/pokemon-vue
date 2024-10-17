@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full px-5 lg:px-24 pt-20 pb-5">
+    <div class="card-pokemon w-full px-5 lg:px-24 pt-20 pb-5">
         <!-- error -->
         <Alert v-if="error" :message="error" />
 

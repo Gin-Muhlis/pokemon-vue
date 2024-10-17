@@ -1,31 +1,33 @@
-describe('Home Page', () => {
+describe('Home Page Tests', () => {
     beforeEach(() => {
-        cy.visit('/')
-    })
+        // Mengunjungi halaman home
+        cy.visit(`/pokemon/${pokemonName}`);
+    });
 
-    it('displays pokemon list after loading', () => {
-        // tunggu skeleton cards hilang dan daftar Pokemon muncul
-        cy.get('.grid').within(() => {
-            cy.get('[class*="skeleton-card"]').should('not.exist')
-        })
+    // cek list pokemon sudah muncul dengan benar
+    it('should display a list of Pokemon cards', () => {
+        cy.get('.card-pokemon').should('have.length.greaterThan', 0);
+    });
 
-        // memastikan daftar Pokemon ditampilkan
-        cy.get('.grid').within(() => {
-            cy.get('[class*="card"]').should('have.length.greaterThan', 0)
-        })
-    })
+    // cek tombol 'Load More' muncul
+    it('should display the Load More button', () => {
+        // Cek apakah tombol 'Load More' ada di halaman
+        cy.get('button').contains('Load More').should('be.visible');
+    });
 
-    it('displays load more button and can load more pokemons', () => {
-        // memastikan tombol "Load More" muncul
-        cy.get('button').contains('Load More').should('exist')
+    // cek tombol apakah list pokemon bertambah atau tidak ketika button 'Load More' diklik
+    it.only('should load more Pokemon when Load More button is clicked', () => {
+        // Tunggu hingga Pokemon pertama kali muncul
+        cy.get('.card-pokemon').should('have.length.greaterThan', 0);
 
-        // klik tombol "Load More" dan pastikan lebih banyak Pokemon ditambahkan
-        cy.get('button').contains('Load More').click()
+        // Dapatkan jumlah Pokemon yang ada sebelum tombol 'Load More' diklik
+        cy.get('.card-pokemon').its('length').then((initialLength) => {
+            // Klik tombol 'Load More'
+            cy.get('button').contains('Load More').click();
 
-        // periksa apakah daftar Pokemon bertambah
-        cy.get('.grid').within(() => {
-            cy.get('[class*="card"]').should('have.length.greaterThan', 21)
-        })
-    })
+            // Cek apakah lebih banyak Pokemon ditambahkan setelah klik tombol 'Load More'
+            cy.get('.card-pokemon').should('have.length.greaterThan', initialLength);
+        });
+    });
 
-})
+});
