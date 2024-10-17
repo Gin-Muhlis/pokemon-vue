@@ -9,7 +9,7 @@
             
             <img src="/images/x.png" alt="X Image" class="x-delete w-4 object-cover">
         </button>
-        <img v-if="catchedPokemonStore.isCatchedPokemon(number)" src="/images/pokeball1.png" alt="Poke ball left image" class="w-5 object cover absolute left-3 top-3">
+        <img v-if="catchedPokemonStore.isCatchedPokemon(number)" src="/images/pokeball1.png" alt="Poke ball left image" class="pokeball-catched w-5 object cover absolute left-3 top-3">
         <img src="/images/pokeball2.png" alt="Poke Ball Image"
             class="poke-ball w-24 object-cover grayscale opacity-20 absolute -top-10 -right-0 lg:-right-7 z-10 -scale-x-100">
         <RouterLink :to="`/pokemon/${name}`">
@@ -23,7 +23,7 @@
                     <!-- nama pokemon -->
                     <p class="pokemon-name text-xl lg:text-2xl font-semibold text-slate-950">{{ handleNamePokemon(name)
                         }}</p>
-                    <p class="pokemon-name text-xl lg:text-lg italic font-semibold text-slate-950">{{ nickname }}</p>
+                    <p class="pokemon-nickname text-xl lg:text-lg italic font-semibold text-slate-950">{{ nickname }}</p>
                 </div>
 
                 <!-- gambar pokemon -->
