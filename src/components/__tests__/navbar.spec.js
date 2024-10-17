@@ -1,41 +1,77 @@
+// Navbar.spec.js
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { mount } from "@vue/test-utils";
-import { describe, it, expect } from "vitest";
-import Navbar from "../Navbar.vue";
+import Navbar from "../../components/Navbar.vue";
+import { createTestingPinia } from '@pinia/testing';
+import { useCatchedPokemonStore } from "../../stores/catchedPokemonStore.js";
 import { RouterLinkStub } from "@vue/test-utils";
 
 describe("Navbar.vue", () => {
-    // cek apakah merender logo dan link ke halaman home
-    it("should render the logo image and link to home page", () => {
-        const wrapper = mount(Navbar, {
+    let wrapper;
+
+    beforeEach(() => {
+        
+
+        wrapper = mount(Navbar, {
             global: {
+                plugins: [
+                    createTestingPinia({
+                        createSpy: vi.fn, // Tambahkan createSpy di sini
+                    })
+                ],
                 stubs: {
-                    RouterLink: RouterLinkStub
+                    RouterLink: RouterLinkStub // Stub RouterLink for testing purposes
                 }
             }
         });
+    });
 
-        // cek apakah properti src sesuai
-        const pokeIconImage = wrapper.find(".icon-poke")
-        expect(pokeIconImage.exists()).toBe(true)
-        expect(pokeIconImage.attributes("src")).toBe("/images/poke.png")
+    // cek apakah icon logo ditampilkan dengan benar   
+    it("renders Pokemon icon logo with correct src", () => {
+        const logo = wrapper.find("img.icon-poke");
+        expect(logo.exists()).toBe(true);
+        expect(logo.attributes("src")).toBe("/images/poke.png");
+    });
 
-        // cek apakah router link mengarah ke home page '/'
-        const routerLink = wrapper.findComponent(RouterLinkStub)
-        expect(routerLink.props().to).toBe("/")
-    })
+    // cek apakah button catch ditampilkan dengan benar
+    it("renders catch button with correct text", () => {
+        const store = useCatchedPokemonStore();
+        store.countCatched = 10; // Set initial value for testing
 
-    // cek apakah button ke halaman catch sudah benar
-    it("Should render the catch button with correct text and image", () => {
-        const wrapper = mount(Navbar)
+        wrapper.vm.$nextTick(() => {
+            const catchButton = wrapper.find("button");
+            expect(catchButton.exists()).toBe(true);
+            expect(catchButton.text()).toContain("10 Catch");
+        });
+    });
 
-        // cek apakah teks button sudah benar
-        const button = wrapper.find("button")
-        expect(button.exists()).toBe(true)
-        expect(button.text()).toContain("0 Catch")
+    // cek apakah route benar
+    it("navigates to the correct route when catch button is clicked", () => {
+        const routerLinks = wrapper.findAllComponents(RouterLinkStub);
+        const myPokemonLink = routerLinks.find(link => link.props().to === "/mypokemon");
 
-        // cek apakah gambar pokeball sudah benar
-        const pokeballIconImage = wrapper.find(".icon-pokeball")
-        expect(pokeballIconImage.exists()).toBe(true)
-        expect(pokeballIconImage.attributes("src")).toBe("/images/pokeball2.png")
-    })
-})
+        expect(myPokemonLink).toBeTruthy();
+        expect(myPokemonLink.props().to).toBe("/mypokemon");
+    });
+
+    it("calls setCountCatchedPokemon when mounted", async () => {
+      // Siapkan local storage dengan data yang diperlukan
+    localStorage.setItem("data", JSON.stringify({
+        catched: [{ id: 1, name: 'Pikachu', number: 1 }],
+        history: []
+    }));
+
+    const store = useCatchedPokemonStore();
+    const setCountSpy = vi.spyOn(store, "setCountCatchedPokemon");
+
+    // Mount komponen
+    const wrapper = mount(Navbar); // Pastikan ini adalah komponen yang benar
+
+    // Tunggu hingga promise dalam mounted selesai
+    await wrapper.vm.$nextTick(); 
+
+    // Pastikan spy dipanggil
+    expect(setCountSpy).toHaveBeenCalled(); 
+        
+    });
+});

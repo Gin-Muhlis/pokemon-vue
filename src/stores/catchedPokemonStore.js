@@ -67,7 +67,7 @@ export const useCatchedPokemonStore = defineStore("catchedPokemonStore", () => {
 
             localStorage.setItem("data", JSON.stringify(data))
             listCatched.value = listCatched.value.filter(pokemon => pokemon.id != id)
-            countCatched.value`` -= 1
+            countCatched.value -= 1
         }
     }
 

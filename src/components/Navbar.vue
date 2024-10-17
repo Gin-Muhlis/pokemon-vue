@@ -13,8 +13,6 @@
                 <img src="/images/pokeball2.png" alt="Poke Ball" class="icon-pokeball w-4 object-cover">
             </button>
         </RouterLink>
-
-
     </div>
 </template>
 
