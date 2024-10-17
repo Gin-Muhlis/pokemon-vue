@@ -18,6 +18,7 @@ describe('Home.vue', () => {
         const pokemonStore = usePokemonStore();
         pokemonStore.error = 'An error occurred';
 
+        // moun komponen
         const wrapper = mount(Home, {
             global: {
                 stubs: {
@@ -26,6 +27,7 @@ describe('Home.vue', () => {
             },
         });
 
+        // cek apakah error muncul
         expect(wrapper.findComponent(Alert).exists()).toBe(true);
         expect(wrapper.findComponent(Alert).props('message')).toBe('An error occurred');
     });
@@ -36,6 +38,7 @@ describe('Home.vue', () => {
         pokemonStore.isSkeleton = true; 
         pokemonStore.skeletonCount = 3; 
 
+        // mount komponen
         const wrapper = mount(Home, {
             global: {
                 stubs: {
@@ -44,6 +47,7 @@ describe('Home.vue', () => {
             },
         });
 
+        // cek jumlah skeleon sesuai dengan state
         const skeletonCards = wrapper.findAllComponents(SkeletonCard);
         expect(skeletonCards.length).toBe(3);
     });
@@ -57,6 +61,7 @@ describe('Home.vue', () => {
             { name: 'Bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
         ];
 
+        // mount
         const wrapper = mount(Home, {
             global: {
                 stubs: {
@@ -77,6 +82,7 @@ describe('Home.vue', () => {
         const store = usePokemonStore();
         const spy = vi.spyOn(store, "setMorePokemonList");
 
+        // mount komponen
         const wrapper = mount(Home, {
             global: {
                 stubs: {
@@ -85,10 +91,9 @@ describe('Home.vue', () => {
             },
         });
 
+        // cek button load more
         const loadMoreButton = wrapper.find('button');
-
         await loadMoreButton.trigger('click');
-
         expect(spy).toHaveBeenCalled();
     });
 });

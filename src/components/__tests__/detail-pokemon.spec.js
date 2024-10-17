@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises  } from '@vue/test-utils'
 import DetailPokemon from '../../views/Detail-Pokemon.vue'
 import Alert from '../Alert.vue'
 import Loading from '../Loading.vue'
@@ -18,7 +18,6 @@ vi.mock('vue-router', () => ({
     }),
 }))
 
-
 describe('Detail-Pokemon.vue', () => {
     beforeEach(() => {
         const pinia = createPinia();
@@ -29,6 +28,8 @@ describe('Detail-Pokemon.vue', () => {
     it('renders error message when error is present', async () => {
         const detailPokemonStore = useDetailPokemonStore();
         detailPokemonStore.error = 'An error occurred';
+
+        // mount komponen
         const wrapper = mount(DetailPokemon, {
             global: {
                 stubs: {
@@ -39,6 +40,7 @@ describe('Detail-Pokemon.vue', () => {
             },
         });
 
+        // cek apakah error muncul
         expect(wrapper.findComponent(Alert).exists()).toBe(true);
         expect(wrapper.findComponent(Alert).props('message')).toBe('An error occurred');
     });
@@ -48,6 +50,7 @@ describe('Detail-Pokemon.vue', () => {
         const detailPokemonStore = useDetailPokemonStore();
         detailPokemonStore.isLoading = true;
 
+        // mount komponen
         const wrapper = mount(DetailPokemon, {
             global: {
                 stubs: {
@@ -66,6 +69,7 @@ describe('Detail-Pokemon.vue', () => {
         const detailPokemonStore = useDetailPokemonStore();
         const catchedPokemonStore = useCatchedPokemonStore();
 
+        // set state
         detailPokemonStore.isLoading = false;
         detailPokemonStore.pokemonDetail = {
             id: 1,
@@ -81,8 +85,10 @@ describe('Detail-Pokemon.vue', () => {
 
         catchedPokemonStore.isCatchedPokemon = vi.fn().mockReturnValue(true);
 
+        // mount komponen
         const wrapper = mount(DetailPokemon)
 
+        // cek data pokemon yang ditampilkan
         expect(wrapper.text()).toContain('#0001');
         expect(wrapper.text()).toContain('Pikachu');
         expect(wrapper.find('img.pokemon-image').attributes('src')).toBe('https://example.com/pikachu.png');
@@ -90,6 +96,8 @@ describe('Detail-Pokemon.vue', () => {
 
     it('renders correct tab content based on the selected tab', async () => {
         const detailPokemonStore = useDetailPokemonStore();
+
+        // set state
         detailPokemonStore.isLoading = false;
         detailPokemonStore.pokemonDetail = {
             id: 1,
@@ -104,6 +112,7 @@ describe('Detail-Pokemon.vue', () => {
         };
         detailPokemonStore.tab = 'About';
 
+        // mount komponen
         const wrapper = mount(DetailPokemon, {
             global: {
                 stubs: {
@@ -114,17 +123,30 @@ describe('Detail-Pokemon.vue', () => {
             },
         });
 
+        // cek komponen about ketika state tab = 'About'
         expect(wrapper.findComponent(About).exists()).toBe(true);
         expect(wrapper.findComponent(Stats).exists()).toBe(false);
         expect(wrapper.findComponent(Moves).exists()).toBe(false);
 
+        // cek komponen stats ketika state tab = 'Stats'
         detailPokemonStore.tab = 'Stats'
+        detailPokemonStore.isLoading = false
         
-        await wrapper.vm.$nextTick();
+        await flushPromises();
 
         expect(wrapper.findComponent(About).exists()).toBe(false);
         expect(wrapper.findComponent(Stats).exists()).toBe(true);
         expect(wrapper.findComponent(Moves).exists()).toBe(false);
+
+        // cek komponen moves ketika state tab = 'Moves'
+        detailPokemonStore.tab = 'Moves'
+        detailPokemonStore.isLoading = false
+        
+        await flushPromises();
+
+        expect(wrapper.findComponent(About).exists()).toBe(false);
+        expect(wrapper.findComponent(Stats).exists()).toBe(false);
+        expect(wrapper.findComponent(Moves).exists()).toBe(true);
 
     });
 });

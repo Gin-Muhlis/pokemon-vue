@@ -40,6 +40,7 @@ describe('CardPokemon.vue', () => {
 
     // cek card apakah merender props dengan benar
     it('renders Pokemon card with props', () => {
+        // mount komponen
         const wrapper = mount(CardPokemon, {
             props: dataProps,  
             global: {
@@ -51,6 +52,7 @@ describe('CardPokemon.vue', () => {
             },
         });
 
+        // cek data pokemon yang ditampilkan
         expect(wrapper.find('.pokemon-number').text()).toBe('0001');
         expect(wrapper.find('.pokemon-name').text()).toBe('Pikachu');
         expect(wrapper.find('img.pokemon-image').attributes('src')).toBe('/images/pikachu.png');
@@ -60,6 +62,8 @@ describe('CardPokemon.vue', () => {
     // cek delete button apakah merender dengan benar
     it('shows delete button when isDelete is true', () => {
         dataProps.isDelete = true
+
+        // mount komponen
         const wrapper = mount(CardPokemon, {
             props: dataProps,
             global: {
@@ -69,6 +73,8 @@ describe('CardPokemon.vue', () => {
             },
 
         });
+
+        // cek delete button ketika props isDelete true
         const deleteButton = wrapper.find('button');
         expect(deleteButton.exists()).toBe(true);
     });
@@ -76,6 +82,8 @@ describe('CardPokemon.vue', () => {
     // cek apakah function deleteCatchedPokemon dipanggil ketika delete button diklik
     it('calls deleteCatchedPokemon on delete button click', async () => {
         dataProps.isDelete = true
+
+        // moun komponen
         const wrapper = mount(CardPokemon, {
             props: dataProps,
             global: {
@@ -85,6 +93,7 @@ describe('CardPokemon.vue', () => {
             },
         });
 
+        // cek apakah fungsi menhapus pokemon terpanggil dengan benar
         const deleteButton = wrapper.find('button');
         await deleteButton.trigger('click');
 
@@ -96,6 +105,7 @@ describe('CardPokemon.vue', () => {
         // Mocking isCatchedPokemon to return true
         store.isCatchedPokemon.mockReturnValue(true);
 
+        // mount komponen
         const wrapper = mount(CardPokemon, {
             props: dataProps,
             global: {
@@ -105,12 +115,14 @@ describe('CardPokemon.vue', () => {
             },
         });
 
+        // cek apakah poke ball muncul di pokemon yang sudah tertangkap
         const pokeBallImage = wrapper.find('.pokeball-catched');
         expect(pokeBallImage.exists()).toBe(true);
     });
 
     // cek apakah pokeball image tidak ditampilkan ketika di pokemon yang belum ditangkap
     it('does not show PokeBall image when Pokemon is not catched', () => {
+        // Mocking isCatchedPokemon to return false
         const wrapper = mount(CardPokemon, {
             props: {
                 name: 'Pikachu',
@@ -125,6 +137,7 @@ describe('CardPokemon.vue', () => {
             },
         });
 
+        // cek apakah poke ball tidak muncul di pokemon yang belum ditangkap
         const pokeBallImage = wrapper.find('img[src="/images/pokeball1.png"]');
         expect(pokeBallImage.exists()).toBe(false);
     });

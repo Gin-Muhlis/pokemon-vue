@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-start justify-start gap-1 px-3 text-sm">
+    <div class="stats flex flex-col items-start justify-start gap-1 px-3 text-sm">
         <!-- list stats pokemon -->
         <ProgressStat v-for="stat in pokemon.stats" :key="stat.stat.name" :name="stat.stat.name" :value="stat.base_stat" />
     </div>

@@ -23,8 +23,7 @@ describe('Throwing.vue', () => {
     // cek apakah button catch menampilkan nama pokemon dengan benar
     it('renders the button with the Pokemon name', () => {
         const store = useDetailPokemonStore();
-        
-        // Set the pokemonDetail state in the store
+
         store.pokemonDetail = { name: 'Pikachu' };
 
         const wrapper = mount(Throwing, {
@@ -42,8 +41,7 @@ describe('Throwing.vue', () => {
     // cek apakah modal muncul
     it('shows the modal when the button is clicked', async () => {
         const store = useDetailPokemonStore();
-        
-        // Set the pokemonDetail state in the store
+
         store.pokemonDetail = { name: 'Pikachu' };
 
         const wrapper = mount(Throwing, {
@@ -53,10 +51,9 @@ describe('Throwing.vue', () => {
             global: { plugins: [pinia] },
         });
 
-        // Mock the modal methods
+        // Mock modal
         const modal = wrapper.find('dialog');
         modal.element.showModal = vi.fn();
-        modal.element.close = vi.fn();
 
         const button = wrapper.find('button');
         await button.trigger('click');
@@ -65,6 +62,7 @@ describe('Throwing.vue', () => {
         expect(modal.element.showModal).toHaveBeenCalled(); // Check if showModal was called
     });
 
+    // cek apakah status menjadi throwing ketika button lempak poke ball diklik
     it('changes status to "throwing" when the button is clicked', async () => {
         const store = useDetailPokemonStore();
 
@@ -73,10 +71,9 @@ describe('Throwing.vue', () => {
             global: { plugins: [pinia] },
         });
 
-        // Mock the modal methods
+        // Mock modal
         const modal = wrapper.find('dialog');
         modal.element.showModal = vi.fn();
-        modal.element.close = vi.fn();
 
         const button = wrapper.find('button');
         await button.trigger('click');
@@ -89,7 +86,7 @@ describe('Throwing.vue', () => {
         const store = useDetailPokemonStore();
         const spy = vi.spyOn(store, "isCatchingPokemon");
 
-        vi.useFakeTimers(); // Use fake timers for setTimeout
+        vi.useFakeTimers();
 
         const pokemon = { name: 'Pikachu' };
         const wrapper = mount(Throwing, {
@@ -97,18 +94,18 @@ describe('Throwing.vue', () => {
             global: { plugins: [pinia] },
         });
 
-         // Mock the modal methods
-         const modal = wrapper.find('dialog');
-         modal.element.showModal = vi.fn();
-         modal.element.close = vi.fn();
+        // Mock modal
+        const modal = wrapper.find('dialog');
+        modal.element.showModal = vi.fn();
+        modal.element.close = vi.fn();
 
         const button = wrapper.find('button');
         await button.trigger('click');
 
-        // Fast-forward time by 2 seconds
+        // majukan waktu 2 detik
         vi.advanceTimersByTime(2000);
 
-        expect(spy).toHaveBeenCalled(); // Ensure function is called
+        expect(spy).toHaveBeenCalled();
     });
 
     // cek apakah teks "Throwing Pokeball..." muncul ketika poke ball dilempar (statusCatch = throwing)
@@ -119,8 +116,8 @@ describe('Throwing.vue', () => {
             global: { plugins: [pinia] },
         });
 
-        store.statusCatch = 'throwing'; // Set the status to throwing
-        await wrapper.vm.$nextTick(); // Wait for the DOM to update
+        store.statusCatch = 'throwing';
+        await wrapper.vm.$nextTick();
 
         const throwingText = wrapper.find('.text-throwing');
         expect(throwingText.text()).toBe('Throwing Pokeball...');
@@ -134,9 +131,8 @@ describe('Throwing.vue', () => {
             global: { plugins: [pinia] },
         });
 
-        store.statusCatch = 'run'; // Set the status to run
-        await wrapper.vm.$nextTick(); // Wait for the DOM to update
-
+        store.statusCatch = 'run';
+        await wrapper.vm.$nextTick();
         const runMessage = wrapper.find('.text-pokemon-run');
         expect(runMessage.text()).toContain('Oops Pikachu run...');
     });
@@ -149,14 +145,14 @@ describe('Throwing.vue', () => {
             global: { plugins: [pinia] },
         });
 
-        store.statusCatch = 'catching'; // Set the status to catching
-        await wrapper.vm.$nextTick(); // Wait for the DOM to update
+        store.statusCatch = 'catching';
+        await wrapper.vm.$nextTick();
 
         const successMessage = wrapper.find('.text-catch-success');
         expect(successMessage.text()).toContain('Wow you catch Pikachu...');
     });
 
-   
+
     // cek apakah fungsi untuk menyimpan data pokemon yang ditangkap terpanggil
     it('calls store.catchingPokemon when Catch button is clicked', async () => {
         const store = useDetailPokemonStore();
@@ -166,14 +162,14 @@ describe('Throwing.vue', () => {
             props: { pokemon: dataProps },
             global: { plugins: [pinia] },
         });
-        
 
-        store.statusCatch = 'catching'; // Set the status to catching
-        await wrapper.vm.$nextTick(); // Wait for the DOM to update
+
+        store.statusCatch = 'catching';
+        await wrapper.vm.$nextTick();
 
         const catchButton = wrapper.find('button.bg-sky-400');
         await catchButton.trigger('click'); // Trigger click
 
-        expect(spy).toHaveBeenCalledWith(dataProps); // Check if store method was called
+        expect(spy).toHaveBeenCalledWith(dataProps);
     });
 });

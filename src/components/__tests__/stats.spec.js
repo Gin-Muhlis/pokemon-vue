@@ -19,7 +19,7 @@ describe('Stats.vue', () => {
         });
 
         const progressStats = wrapper.findAllComponents(ProgressStat);
-        expect(progressStats.length).toBe(pokemonMock.stats.length); // Memastikan jumlah ProgressStat sama dengan jumlah stats
+        expect(progressStats.length).toBe(pokemonMock.stats.length); 
     });
 
     // cek props yang diteruskan

@@ -15,6 +15,7 @@ describe('Catched', () => {
         const pinia = createPinia();
         setActivePinia(pinia);
         
+        // set state
         store = useCatchedPokemonStore(pinia);
         store.listCatched = [
             { id: "1", name: 'Pikachu', image: 'pikachu.png', nickname: 'Pika', number: "0025" },
@@ -26,7 +27,9 @@ describe('Catched', () => {
         store.tab = 'Catched';
     });
 
+    // cek tab yang muncul adalah 'Catched' dan list pokemon yang muncul sudah sesuai
     it('renders the Catched tab and displays the list of caught Pokemon', async () => {
+        // mount komponen
         const wrapper = mount(Catched, {
             global: {
                 stubs: {
@@ -46,7 +49,9 @@ describe('Catched', () => {
         expect(cardPokemons[1].props('name')).toBe('Charmander');
     });
 
+    // cek tab yang muncul adalah 'History' dan list histori penangkapan muncul dengan benar
     it('renders the History tab and displays the list of history Pokemon', async () => {
+        // mount komponen
         const wrapper = mount(Catched, {
             global: {
                 stubs: {
@@ -54,6 +59,7 @@ describe('Catched', () => {
                 },
             },
         });
+
         const tabHistory = wrapper.find('.tab-history');
         await tabHistory.trigger('click');
 

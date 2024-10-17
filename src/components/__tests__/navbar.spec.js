@@ -48,6 +48,7 @@ describe("Navbar.vue", () => {
         const routerLinks = wrapper.findAllComponents(RouterLinkStub);
         const myPokemonLink = routerLinks.find(link => link.props().to === "/mypokemon");
 
+        // cek link
         expect(myPokemonLink).toBeTruthy();
         expect(myPokemonLink.props().to).toBe("/mypokemon");
     });
@@ -62,7 +63,13 @@ describe("Navbar.vue", () => {
         const setCountSpy = vi.spyOn(store, "setCountCatchedPokemon");
 
         // Mount komponen
-        const wrapper = mount(Navbar);
+        const wrapper = mount(Navbar, {
+            global: {
+                stubs: {
+                    RouterLink: RouterLinkStub
+                }
+            }
+        });
 
         // Tunggu hingga promise dalam mounted selesai
         await wrapper.vm.$nextTick();

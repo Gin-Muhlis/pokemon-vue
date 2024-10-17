@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-start justify-start gap-4 px-3">
+    <div class="about flex flex-col items-start justify-start gap-4 px-3">
         <!-- tipe pokemon -->
         <div class="flex items-start justify-start gap-3 w-full">
             <KeyAbout name="Type" />

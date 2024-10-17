@@ -20,41 +20,41 @@ describe('TabButton.vue', () => {
             global: { plugins: [pinia] },
         });
 
-        const button = wrapper.find('a[role="tab"]');
-        expect(button.exists()).toBe(true); // Memastikan tombol ada
-        expect(button.text()).toBe(name); // Memastikan nama tombol benar
+        const button = wrapper.find('.tab');
+        expect(button.exists()).toBe(true);
+        expect(button.text()).toBe(name);
     });
 
     // cek tab button diterapkan dengan kelas aktif dan shadow
     it('applies active class when store.tab matches the name', async () => {
         const name = 'Details';
-        const store = useDetailPokemonStore(); // Mengambil store
-        store.tab = name; // Mengatur tab saat ini ke nama yang sama
+        const store = useDetailPokemonStore();
+        store.tab = name;
 
         const wrapper = mount(TabButton, {
             props: { name },
             global: { plugins: [pinia] },
         });
 
-        const button = wrapper.find('a[role="tab"]');
-        expect(button.classes()).toContain('bg-sky-400'); // Memastikan kelas aktif diterapkan
-        expect(button.classes()).toContain('shadow-lg'); // Memastikan shadow diterapkan
+        const button = wrapper.find('.tab');
+        expect(button.classes()).toContain('bg-sky-400');
+        expect(button.classes()).toContain('shadow-lg');
     });
 
     // cek apakah fungsi changeTab dipanggil dengan benar
     it('calls store.changeTab when button is clicked', async () => {
         const name = 'Details';
         const store = useDetailPokemonStore();
-        const spy = vi.spyOn(store, 'changeTab'); // Memantau fungsi changeTab
+        const spy = vi.spyOn(store, 'changeTab');
 
         const wrapper = mount(TabButton, {
             props: { name },
             global: { plugins: [pinia] },
         });
 
-        const button = wrapper.find('a[role="tab"]');
-        await button.trigger('click'); // Trigger klik pada button
+        const button = wrapper.find('.tab');
+        await button.trigger('click'); 
 
-        expect(spy).toHaveBeenCalledWith(name); // Memastikan fungsi dipanggil dengan nama yang benar
+        expect(spy).toHaveBeenCalledWith(name);
     });
 });

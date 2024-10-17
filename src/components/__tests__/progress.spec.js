@@ -29,6 +29,7 @@ describe('ProgressStat.vue', () => {
             props: propsData,
         });
 
+        // cek apakah image muncul dan src yang benar
         const img = wrapper.find('img');
         expect(img.exists()).toBe(true); // Memastikan img ada
         expect(img.attributes('src')).toBe(`/images/${propsData.name}.png`); // Memastikan src image sesuai dengan name stat
@@ -40,6 +41,7 @@ describe('ProgressStat.vue', () => {
             props: propsData,
         });
 
+        // cek value progress stat
         const progressBar = wrapper.find('progress');
         expect(progressBar.attributes('value')).toBe(propsData.value.toString()); // Memastikan value pada progress bar sesuai dengan prop value
         expect(progressBar.attributes('max')).toBe('255'); // Memastikan nilai max adalah 255
