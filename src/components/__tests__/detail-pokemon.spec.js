@@ -1,152 +1,220 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mount, flushPromises  } from '@vue/test-utils'
-import DetailPokemon from '../../views/Detail-Pokemon.vue'
-import Alert from '../Alert.vue'
-import Loading from '../Loading.vue'
-import About from '../detailPokemon/About.vue'
-import Stats from '../detailPokemon/Stats.vue'
-import Moves from '../detailPokemon/Moves.vue'
-import { createPinia, setActivePinia } from 'pinia'
-import { useDetailPokemonStore } from '../../stores/detailPokemonStore'
-import { useCatchedPokemonStore } from '../../stores/catchedPokemonStore'
-import { nextTick } from 'vue'
+import { getDetailPokemon } from "@/api/pokemon.api"
+import DetailPokemon from "@/views/DetailPokemon.vue"
+import { mount, RouterLinkStub } from "@vue/test-utils"
+import { setActivePinia, createPinia } from "pinia"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import Alert from "../alert.vue"
+import Loading from "../loading.vue"
+import { dummyPokemonData } from "./detail-pokemon.setup"
+import Data from "../detail-pokemon/data.vue"
+import Sprite from "../detail-pokemon/sprite.vue"
+import About from "../detail-pokemon/about.vue"
+import Stats from "../detail-pokemon/stats.vue"
+import Moves from "../detail-pokemon/moves.vue"
+import { generateRandNumber } from "@/helpers/pokemon"
+import { usePokemonStore } from "@/stores/pokemon"
 
-// Mock useRoute
 vi.mock('vue-router', () => ({
     useRoute: () => ({
         params: { name: 'pikachu' }
-    }),
+    })
 }))
 
-describe('Detail-Pokemon.vue', () => {
+vi.mock('@/api/pokemon.api.js', () => ({
+    getDetailPokemon: vi.fn()
+}))
+
+vi.mock('@/helpers/pokemon.js', async () => {
+    const actual = await vi.importActual('@/helpers/pokemon.js')
+    return {
+        ...actual,
+        generateRandNumber: vi.fn()
+    }
+})
+
+describe('DetailPokemon.vue', () => {
+    const mockingData = dummyPokemonData
+
     beforeEach(() => {
-        const pinia = createPinia();
-        setActivePinia(pinia);
-    });
+        setActivePinia(createPinia())
 
-    // cek apakah error message muncul ketika ada error
+        getDetailPokemon.mockClear()
+        generateRandNumber.mockClear()
+
+        vi.useFakeTimers()
+
+        HTMLDialogElement.prototype.showModal = vi.fn()
+        HTMLDialogElement.prototype.close = vi.fn()
+    })
+
+    afterEach(() => {
+        vi.clearAllTimers()
+        vi.useRealTimers()
+    })
+
+    // cek error
     it('renders error message when error is present', async () => {
-        const detailPokemonStore = useDetailPokemonStore();
-        detailPokemonStore.error = 'An error occurred';
+        getDetailPokemon.mockRejectedValueOnce(new Error('API Error'))
 
-        // mount komponen
         const wrapper = mount(DetailPokemon, {
             global: {
                 stubs: {
-                    RouterLink: {
-                        template: '<a><slot /></a>',
-                    },
-                },
+                    RouterLink: RouterLinkStub,
+                }
             },
         });
 
-        // cek apakah error muncul
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
+
         expect(wrapper.findComponent(Alert).exists()).toBe(true);
-        expect(wrapper.findComponent(Alert).props('message')).toBe('An error occurred');
+        expect(wrapper.findComponent(Alert).props('message')).toBe('Get pokemon failed');
     });
 
-    // cek apakah loading muncul ketika isloading true
-    it('renders loading component when isLoading is true', async () => {
-        const detailPokemonStore = useDetailPokemonStore();
-        detailPokemonStore.isLoading = true;
+    // cek loading
+    it('renders loading while getting the data', async () => {
+        getDetailPokemon.mockImplementation(() => new Promise(() => { }))
 
-        // mount komponen
         const wrapper = mount(DetailPokemon, {
             global: {
                 stubs: {
-                    RouterLink: {
-                        template: '<a><slot /></a>',
-                    },
-                },
+                    RouterLink: RouterLinkStub,
+                }
             },
         });
 
-        expect(wrapper.findComponent(Loading).exists()).toBe(true);
-    });
+        await wrapper.vm.$nextTick()
 
-    // cek apakah detail pokemon muncul
-    it('renders pokemon detail when isLoading is false and no error', async () => {
-        const detailPokemonStore = useDetailPokemonStore();
-        const catchedPokemonStore = useCatchedPokemonStore();
+        expect(wrapper.findComponent(Loading).exists()).toBe(true)
+    })
 
-        // set state
-        detailPokemonStore.isLoading = false;
-        detailPokemonStore.pokemonDetail = {
-            id: 1,
-            name: 'Pikachu',
-            sprites: {
-                other: {
-                    'official-artwork': {
-                        front_default: 'https://example.com/pikachu.png',
-                    }
-                }
-            },
-        };
+    // cek data
+    it('renders pokemon and detail data pokemon when it ready', async () => {
+        getDetailPokemon.mockResolvedValueOnce(mockingData)
 
-        catchedPokemonStore.isCatchedPokemon = vi.fn().mockReturnValue(true);
-
-        // mount komponen
-        const wrapper = mount(DetailPokemon)
-
-        // cek data pokemon yang ditampilkan
-        expect(wrapper.text()).toContain('#0001');
-        expect(wrapper.text()).toContain('Pikachu');
-        expect(wrapper.find('img.pokemon-image').attributes('src')).toBe('https://example.com/pikachu.png');
-    });
-
-    it('renders correct tab content based on the selected tab', async () => {
-        const detailPokemonStore = useDetailPokemonStore();
-
-        // set state
-        detailPokemonStore.isLoading = false;
-        detailPokemonStore.pokemonDetail = {
-            id: 1,
-            name: 'Pikachu',
-            sprites: {
-                other: {
-                    'official-artwork': {
-                        front_default: 'https://example.com/pikachu.png',
-                    }
-                }
-            },
-        };
-        detailPokemonStore.tab = 'About';
-
-        // mount komponen
         const wrapper = mount(DetailPokemon, {
             global: {
                 stubs: {
-                    RouterLink: {
-                        template: '<a><slot /></a>',
-                    },
-                },
+                    RouterLink: RouterLinkStub,
+                }
             },
         });
 
-        // cek komponen about ketika state tab = 'About'
-        expect(wrapper.findComponent(About).exists()).toBe(true);
-        expect(wrapper.findComponent(Stats).exists()).toBe(false);
-        expect(wrapper.findComponent(Moves).exists()).toBe(false);
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
 
-        // cek komponen stats ketika state tab = 'Stats'
-        detailPokemonStore.tab = 'Stats'
-        detailPokemonStore.isLoading = false
+        expect(wrapper.findComponent(Sprite).exists()).toBe(true)
+        expect(wrapper.findComponent(Data).exists()).toBe(true)
+    })
+
+    // cek tab detail pokemon
+    it('renders the right content based on tab', async () => {
+        getDetailPokemon.mockResolvedValueOnce(mockingData)
+
+        const wrapper = mount(DetailPokemon, {
+            global: {
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                }
+            },
+        });
+
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
+
+        const dataPokemon = wrapper.findComponent(Data)
+        expect(dataPokemon.exists()).toBe(true)
+
+        const tabAbout = dataPokemon.find('.tab-About')
+
+        await tabAbout.trigger('click')
+
+        await wrapper.vm.$nextTick()
+
+        const dataAbout = wrapper.findComponent(About)
+        expect(dataAbout.exists()).toBe(true)
+
+        const tabStats = dataPokemon.find('.tab-Stats')
+
+        await tabStats.trigger('click')
+
+        await wrapper.vm.$nextTick()
+
+        const dataStats = wrapper.findComponent(Stats)
+        expect(dataStats.exists()).toBe(true)
+
+        const tabMoves = dataPokemon.find('.tab-Moves')
+
+        await tabMoves.trigger('click')
+
+        await wrapper.vm.$nextTick()
+
+        const dataMoves = wrapper.findComponent(Moves)
+        expect(dataMoves.exists()).toBe(true)
+    })
+
+    // cek pesan pokemon lari ketika melempar poke ball
+    it('render message when pokemon is run', async () => {
+        getDetailPokemon.mockResolvedValueOnce(mockingData)
+
+        generateRandNumber.mockReturnValue(1)
         
-        await flushPromises();
+        const wrapper = mount(DetailPokemon, {
+            global: {
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                }
+            },
+        });
 
-        expect(wrapper.findComponent(About).exists()).toBe(false);
-        expect(wrapper.findComponent(Stats).exists()).toBe(true);
-        expect(wrapper.findComponent(Moves).exists()).toBe(false);
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
 
-        // cek komponen moves ketika state tab = 'Moves'
-        detailPokemonStore.tab = 'Moves'
-        detailPokemonStore.isLoading = false
+        const sprite = wrapper.findComponent(Sprite)
+        expect(sprite.exists()).toBe(true)
+
+        const buttonPokeBall = sprite.find('.btn-poke-ball')
+
+        await buttonPokeBall.trigger('click')
         
-        await flushPromises();
+        vi.advanceTimersByTime(2000)
 
-        expect(wrapper.findComponent(About).exists()).toBe(false);
-        expect(wrapper.findComponent(Stats).exists()).toBe(false);
-        expect(wrapper.findComponent(Moves).exists()).toBe(true);
+        await wrapper.vm.$nextTick();
+        
+        const runMessage = document.querySelector('.run-message')
+        
+        expect(runMessage).not.toBeNull()
+    })
 
-    });
-});
+    // cek form tangkap pokemon ketika melempar poke ball dan berhasil
+    it('renders form catch pokemon when pokemon is catched', async () => {
+        getDetailPokemon.mockResolvedValueOnce(mockingData)
+
+        generateRandNumber.mockReturnValue(2)
+        
+        const wrapper = mount(DetailPokemon, {
+            global: {
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                }
+            },
+        });
+
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
+
+        const sprite = wrapper.findComponent(Sprite)
+        expect(sprite.exists()).toBe(true)
+
+        const buttonPokeBall = sprite.find('.btn-poke-ball')
+
+        await buttonPokeBall.trigger('click')
+        vi.advanceTimersByTime(2000)
+
+        await wrapper.vm.$nextTick();
+        
+        const runMessage = document.querySelector('.form-catch')
+        
+        expect(runMessage).not.toBeNull()
+    })
+})

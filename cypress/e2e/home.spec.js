@@ -16,7 +16,7 @@ describe('Home Page Tests', () => {
     });
 
     // cek tombol apakah list pokemon bertambah atau tidak ketika button 'Load More' diklik
-    it.only('should load more Pokemon when Load More button is clicked', () => {
+    it('should load more Pokemon when Load More button is clicked', () => {
         // Tunggu hingga Pokemon pertama kali muncul
         cy.get('.card-pokemon').should('have.length.greaterThan', 0);
 

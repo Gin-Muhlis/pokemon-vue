@@ -1,99 +1,178 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mount } from '@vue/test-utils'
-import Home from '../../views/Home.vue'
-import CardPokemon from '../CardPokemon.vue'
-import SkeletonCard from '../SkeletonCard.vue'
-import Alert from '../Alert.vue'
+import { mount, RouterLinkStub } from '@vue/test-utils'
+import Home from '@/views/Home.vue'
+import DetailPokemon from '@/views/DetailPokemon.vue'
+import CardPokemon from '../card-pokemon.vue'
+import SkeletonCard from '../home/skeleton-card.vue'
+import Alert from '../alert.vue'
 import { createPinia, setActivePinia } from 'pinia'
-import { usePokemonStore } from '../../stores/pokemonStore'
+import { usePokemonStore } from '@/stores/pokemon.js'
+import { getPokemonList } from '@/api/pokemon.api.js';
+import { createRouter, createWebHistory } from 'vue-router';
+
+// const routes = [
+//     { path: '/pokemon/:name', component: DetailPokemon }
+// ]
+
+// const router = createRouter({
+//     history: createWebHistory(),
+//     routes
+// })
+
+vi.mock('@/api/pokemon.api.js', () => ({
+    getPokemonList: vi.fn()
+}))
 
 describe('Home.vue', () => {
     beforeEach(() => {
-        const pinia = createPinia();
-        setActivePinia(pinia);
+        setActivePinia(createPinia())
+
+        getPokemonList.mockClear()
     });
+
 
     // cek error message ketika terjadi error
     it('renders error message when error is present', async () => {
-        const pokemonStore = usePokemonStore();
-        pokemonStore.error = 'An error occurred';
+        getPokemonList.mockRejectedValueOnce(new Error('API Error'))
 
-        // moun komponen
         const wrapper = mount(Home, {
             global: {
                 stubs: {
-                    RouterLink: true,
-                },
+                    RouterLink: RouterLinkStub,
+                }
             },
         });
 
-        // cek apakah error muncul
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
+
         expect(wrapper.findComponent(Alert).exists()).toBe(true);
-        expect(wrapper.findComponent(Alert).props('message')).toBe('An error occurred');
+        expect(wrapper.findComponent(Alert).props('message')).toBe('Get pokemon failed');
     });
 
-    // cek loading skeleton
-    it('renders skeleton loading state when isSkeleton is true', async () => {
-        const pokemonStore = usePokemonStore();
-        pokemonStore.isSkeleton = true; 
-        pokemonStore.skeletonCount = 3; 
+    // cek skeleton
+    it('renders skeleton when when status is loading', async () => {
+        getPokemonList.mockImplementation(() => new Promise(() => { }))
 
-        // mount komponen
         const wrapper = mount(Home, {
             global: {
                 stubs: {
-                    RouterLink: true,
-                },
+                    RouterLink: RouterLinkStub,
+                }
             },
         });
 
-        // cek jumlah skeleon sesuai dengan state
-        const skeletonCards = wrapper.findAllComponents(SkeletonCard);
-        expect(skeletonCards.length).toBe(3);
-    });
+        await wrapper.vm.$nextTick()
 
-    // cek list skeleton
-    it('renders list of pokemons when isSkeleton is false and no error', async () => {
-        const pokemonStore = usePokemonStore();
-        pokemonStore.isSkeleton = false; // Disable skeleton
-        pokemonStore.pokemonList = [
-            { name: 'Pikachu', url: 'https://pokeapi.co/api/v2/pokemon/25/' },
-            { name: 'Bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
-        ];
+        expect(wrapper.findComponent(SkeletonCard).exists()).toBe(true)
+    })
 
-        // mount
+    // cek pokemon card
+    it('renders pokemon card when loading is done', async () => {
+        const pokemonMockData = {
+            data: {
+                results: [
+                    { name: 'pikachu', url: 'https://pokeapi.co/api/v2/pokemon/25/' },
+                    { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
+                ]
+            }
+        }
+
+        getPokemonList.mockResolvedValueOnce(pokemonMockData)
+
         const wrapper = mount(Home, {
             global: {
                 stubs: {
-                    RouterLink: true,
-                },
+                    RouterLink: RouterLinkStub,
+                }
             },
         });
 
-        // Cek  komponen CardPokemon
-        const cardPokemons = wrapper.findAllComponents(CardPokemon);
-        expect(cardPokemons.length).toBe(2);
-        expect(cardPokemons[0].props('name')).toBe('Pikachu');
-        expect(cardPokemons[1].props('name')).toBe('Bulbasaur');
-    });
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
 
-    // cek button load more
-    it('calls setMorePokemonList when "Load More" button is clicked', async () => {
-        const store = usePokemonStore();
-        const spy = vi.spyOn(store, "setMorePokemonList");
+        expect(wrapper.findComponent(CardPokemon).exists()).toBe(true)
+        expect(wrapper.findAllComponents(CardPokemon).length).toBe(pokemonMockData.data.results.length)
+    })
 
-        // mount komponen
+    // cek load more pokemon
+    it('should renders more pokemon when button Load More is clicked', async () => {
+        const initialPokemonMockData = {
+            data: {
+                results: [
+                    { name: 'pikachu', url: 'https://pokeapi.co/api/v2/pokemon/25/' },
+                    { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' }
+                ]
+            }
+        }
+
+        const morePokemonMockData = {
+            data: {
+                results: [
+                    { name: 'charmander', url: 'https://pokeapi.co/api/v2/pokemon/4/' },
+                    { name: 'squirtle', url: 'https://pokeapi.co/api/v2/pokemon/7/' },
+                ]
+            }
+        }
+
+        getPokemonList.mockResolvedValueOnce(initialPokemonMockData)
+
         const wrapper = mount(Home, {
             global: {
                 stubs: {
-                    RouterLink: true,
-                },
+                    RouterLink: RouterLinkStub,
+                }
             },
         });
 
-        // cek button load more
-        const loadMoreButton = wrapper.find('button');
-        await loadMoreButton.trigger('click');
-        expect(spy).toHaveBeenCalled();
-    });
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.findAllComponents(CardPokemon).length).toBe(initialPokemonMockData.data.results.length)
+
+        getPokemonList.mockResolvedValueOnce(morePokemonMockData)
+
+        let finalLengthCard = initialPokemonMockData.data.results.length + morePokemonMockData.data.results.length
+        await wrapper.find('.btn-loadmore').trigger('click')
+
+        expect(wrapper.findAllComponents(CardPokemon).length).toBe(finalLengthCard)
+    })
+
+    // navigate ketika card di klik ke detail pokemon
+    it('should navigate to detail pokemon when card pokemon is clicked', async () => {
+        const initialPokemonMockData = {
+            data: {
+                results: [
+                    { name: 'pikachu', url: 'https://pokeapi.co/api/v2/pokemon/25/' }
+                ]
+            }
+        }
+
+        getPokemonList.mockResolvedValueOnce(initialPokemonMockData)
+
+        const wrapper = mount(Home, {
+            global: {
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                }
+            },
+        });
+
+        await wrapper.vm.$nextTick()
+        await wrapper.vm.$nextTick()
+
+        const cardPokemon = wrapper.findComponent(CardPokemon)
+        expect(cardPokemon.exists()).toBe(true)
+
+
+        const linkDetail = cardPokemon.findComponent(RouterLinkStub)
+        expect(linkDetail.props().to).toBe('/pokemon/pikachu')
+
+        // await linkDetail.trigger('click');
+
+        // await router.isReady();
+        // await wrapper.vm.$nextTick();
+
+        // expect(wrapper.vm.$router.currentRoute.value.fullPath).toBe('/pokemon/pikachu');
+    })
 });

@@ -12,7 +12,7 @@ describe('Pokemon Detail Page', () => {
 
         // cek data Pokemon ditampilkan
         cy.get('.poke-number').should('contain', '#0025');
-        cy.get('h1').should('contain', 'Pikachu');
+        cy.get('h1').should('contain', 'pikachu');
 
         // cek gambar Pokemon ditampilkan
         cy.get('.pokemon-image').should('have.attr', 'src').should('include', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png');

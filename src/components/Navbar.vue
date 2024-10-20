@@ -19,9 +19,9 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
-import { useCatchedPokemonStore } from "../stores/catchedPokemonStore.js"
+import { usePokemonStore } from "@/stores/pokemon.js"
 
-const store = useCatchedPokemonStore()
+const store = usePokemonStore()
 
 const { countCatched } = storeToRefs(store)
 

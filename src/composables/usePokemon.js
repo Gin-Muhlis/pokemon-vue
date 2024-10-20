@@ -1,9 +1,10 @@
 export function usePokemon() {
     // generate gambar pokemon
     const handleImagePokemon = (urlPokemon) => {
+        console.log(urlPokemon)
+
         const segments = urlPokemon.split('/');
         const id = segments[segments.length - 2];
-
         return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
     }
 
@@ -47,11 +48,40 @@ export function usePokemon() {
         fairy: 'bg-fairy'
     };
 
+    function isCatchedPokemon(number) {
+        let data = localStorage.getItem("data")
+
+        if (data) {
+            data = JSON.parse(data)
+
+            const indexPokemon = data.catched.findIndex(pokemon => pokemon.number == number)
+
+            if (indexPokemon > -1) {
+                return true
+            } else {
+                return false
+            }
+        }
+        return false
+    }
+
+    function handleModal(id, type) {
+        const element = document.getElementById(id)
+
+        if (type == 'open') {
+            element.showModal()
+        } else {
+            element.close()
+        }
+    }
+
     return {
         handleImagePokemon,
         handleNumberPokemon,
         handleNamePokemon,
         handleDetailImagePokemon,
-        typeColors
+        typeColors,
+        isCatchedPokemon,
+        handleModal
     }
 }

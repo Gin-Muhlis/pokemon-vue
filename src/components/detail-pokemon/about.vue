@@ -4,8 +4,8 @@
         <div class="flex items-start justify-start gap-3 w-full">
             <KeyAbout name="Type" />
 
-            <div v-for="type in pokemon.types" :key="type.slot"
-                :class="[typeColors[type.type.name], 'py-1', 'px-2', 'rounded']">
+            <div v-for="type in pokemon.types" :key="type.slot" class="py-1 px-2 rounded"
+                :class="typeColors[type.type.name]">
                 <p class="text-xs text-white value-type">{{ type.type.name }}</p>
             </div>
         </div>
@@ -13,7 +13,7 @@
         <!-- height pokemon -->
         <div class="flex items-start justify-start gap-3 w-full">
             <KeyAbout name="Height" />
-            
+
             <p class="text-sm value-height">{{ pokemon.height }} (m)</p>
         </div>
 
@@ -48,11 +48,9 @@
 </template>
 
 <script setup>
-import KeyAbout from "./KeyAbout.vue";
+import KeyAbout from "./key-about.vue";
 import { usePokemon } from "../../composables/usePokemon.js"
-
-// memecah fungsi dri usePokemon
-const { typeColors } = usePokemon()
+import { typeColors } from "@/helpers/pokemon.js"
 
 // mendifinisikan props
 defineProps({

@@ -1,5 +1,5 @@
 <template>
-    <div
+    <div v-for="count in 21" :key="count"
         class="skeleton w-full rounded-xl bg-white px-8 py-3 h-32 flex relative items-center justify-between gap-1">
         <!-- gambar poke ball top -->
         <img src="/images/pokeball2.png" alt="Poke ball image"
