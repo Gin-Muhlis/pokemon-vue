@@ -2,9 +2,6 @@ import { defineStore } from "pinia";
 import { getPokemonList, getDetailPokemon } from "@/api/pokemon.api";
 import { reactive, ref } from "vue";
 import { v4 as uuidv4 } from 'uuid';
-import { handleModal } from '@/helpers/modal.js'
-import { generateRandNumber } from "@/helpers/pokemon";
-
 export const usePokemonStore = defineStore('pokemon', () => {
     // inisiasi state
     const pokemonList = ref([])
@@ -77,27 +74,6 @@ export const usePokemonStore = defineStore('pokemon', () => {
         }
     }
 
-
-    // generate is catching pokemon
-    function throwPokeBall() {
-        statusCatch.value = 'throwing'
-        setTimeout(() => {
-            // random number antara 1 dan 2
-            const randomNumber = generateRandNumber()
-            const isCatched = 2
-
-            // cek apakah pokemon tertangkap
-            if (randomNumber == isCatched) {
-                statusCatch.value = "catching"
-            } else {  
-                statusCatch.value = "run"
-                setTimeout(() => {
-                    handleModal('throwing-modal', 'close')
-                }, 2000);
-            }
-        }, 2000);
-    }
-
     // tangkap pokemon
     function catchPokemon(pokemon) {
         // cek jika nickname pokemon tidak diisi
@@ -136,6 +112,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
         // ubah status menjadi tertangkap
         statusCatch.value = "catched"
         countCatched.value += 1
+        nickPokemon.value = ''
     }
 
 
@@ -191,7 +168,6 @@ export const usePokemonStore = defineStore('pokemon', () => {
         setDetailPokemon,
         tabDetailPokemon,
         statusCatch,
-        throwPokeBall,
         catchPokemon,
         errorInputNickname,
         nickPokemon,

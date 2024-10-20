@@ -39,7 +39,6 @@
 </template>
 
 <script setup>
-import { usePokemon } from "@/composables/usePokemon.js"
 import { usePokemonStore } from "@/stores/pokemon.js"
 import { isCatchedPokemon } from "@/helpers/pokemon.js"
 

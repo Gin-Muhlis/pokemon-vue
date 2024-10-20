@@ -49,7 +49,6 @@
 
 <script setup>
 import KeyAbout from "./key-about.vue";
-import { usePokemon } from "../../composables/usePokemon.js"
 import { typeColors } from "@/helpers/pokemon.js"
 
 // mendifinisikan props

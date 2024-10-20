@@ -71,6 +71,7 @@ const { pokemonDetail, nickPokemon, errorInputNickname } = storeToRefs(store)
 function releasePokemon() {
     handleModal('throwing-modal', 'close')
     store.statusCatch = 'throwing'
+    store.nickPokemon = ''
     emit('close')
 }
 
