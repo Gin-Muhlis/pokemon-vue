@@ -12,7 +12,6 @@ import About from "../detail-pokemon/about.vue"
 import Stats from "../detail-pokemon/stats.vue"
 import Moves from "../detail-pokemon/moves.vue"
 import { generateRandNumber } from "@/helpers/pokemon"
-import { usePokemonStore } from "@/stores/pokemon"
 
 vi.mock('vue-router', () => ({
     useRoute: () => ({
