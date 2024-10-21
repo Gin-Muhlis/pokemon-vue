@@ -17,7 +17,7 @@
 
 <script setup>
 
-import Alert from "@/components/TempAlert.vue"
+import Alert from "@/components/alert.vue"
 import Data from "@/components/detail-pokemon/data.vue"
 import Sprite from "@/components/detail-pokemon/sprite.vue"
 import Loading from "@/components/loading.vue"

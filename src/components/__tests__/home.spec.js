@@ -4,7 +4,7 @@ import Home from '@/views/Home.vue'
 import DetailPokemon from '@/views/DetailPokemon.vue'
 import CardPokemon from '../card-pokemon.vue'
 import SkeletonCard from '../home/skeleton-card.vue'
-import Alert from '../TempAlert.vue'
+import Alert from '../alert.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { usePokemonStore } from '@/stores/pokemon.js'
 import { getPokemonList } from '@/api/pokemon.api.js';
