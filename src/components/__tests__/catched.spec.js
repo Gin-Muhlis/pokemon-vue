@@ -7,6 +7,21 @@ import CardPokemon from "../card-pokemon.vue";
 describe('Catched.vue', () => {
     let dummyData;
 
+    const tabs = [
+        {title: 'Tab Catched', tabClass: '.tab-catched', targetClass: '.list-catched'},
+        {title: 'Tab History', tabClass: '.tab-history', targetClass: '.list-history'}
+    ]
+
+    function mountComponent() {
+        return mount(Catched, {
+            global: {
+                stubs: {
+                    RouterLink: true
+                }
+            }
+        })
+    }
+
     beforeEach(() => {
         setActivePinia(createPinia())
 
@@ -32,71 +47,60 @@ describe('Catched.vue', () => {
 
     // cek tab
     it('render tabs correctly with text Catched and History', () => {
-        const wrapper = mount(Catched, {
-            global: {
-                stubs: {
-                    RouterLink: true
-                }
-            }
-        })
+        const wrapper = mountComponent()
         const tabs = wrapper.find('.tabs')
-        expect(tabs.exists()).toBe(true)
 
         const listTab = tabs.findAll('.tab')
-        expect(listTab[0].text()).contain('Catched')
-        expect(listTab[1].text()).contain('History')
+
+        expectShowTabs(listTab)
     })
 
+    
     // cek konten tab
-    it('render the right content when tab is clicked', async () => {
-        const wrapper = mount(Catched, {
-            global: {
-                stubs: {
-                    RouterLink: true
-                }
-            }
-        })
+    it.each(tabs)('render the right content when tab is clicked $title', async ({tabClass, targetClass}) => {
+        const wrapper = mountComponent()
 
-        const tabCatched = wrapper.find('.tab-catched')
+        const tab = wrapper.find(tabClass)
 
-        await tabCatched.trigger('click')
+        await tab.trigger('click')
 
-        await wrapper.vm.$nextTick()
-        
-
-        const listCatched = wrapper.find('.list-catched')
-        expect(listCatched.exists()).toBe(true)
-
-        const tabHistory = wrapper.find('.tab-history')
-
-        await tabHistory.trigger('click')
-
-        await wrapper.vm.$nextTick()
-        const listHistory = wrapper.find('.list-history')
-        
-        expect(listHistory.exists()).toBe(true)
+        expectShowTabContent(wrapper, targetClass)
     })
 
     // delete data catched
     it('should delete data catched when delete button is clicked', async () => {
-        const wrapper = mount(Catched, {
-            global: {
-                stubs: {
-                    RouterLink: true
-                }
-            }
-        })
+        const wrapper = mountComponent()
 
         await wrapper.vm.$nextTick()
 
         const cardsPokemon = wrapper.findAllComponents(CardPokemon)
 
-        expect(cardsPokemon.length).toBe(dummyData.length)
+        let expectedLength = dummyData.length
+        expectLengthPokemon(cardsPokemon, expectedLength)
 
         await cardsPokemon[0].find('.btn-delete').trigger('click')
 
-        await wrapper.vm.$nextTick()
+        const newCardsPokemon = wrapper.findAllComponents(CardPokemon)
 
-        expect(wrapper.findAllComponents(CardPokemon).length).toBe(dummyData.length - 1)
+        expectedLength = dummyData.length - 1
+        expectLengthPokemon(newCardsPokemon, expectedLength)
     })
+
+    // expect
+    function expectShowTabs(listTab) {
+        expect(listTab[0].text()).contain('Catched')
+        expect(listTab[1].text()).contain('History')
+    }
+
+    function expectShowTabContent(wrapper, targetClass) {
+        const targetData = wrapper.find(targetClass)
+        expect(targetData.exists()).toBe(true)
+
+        const cardsPokemon = wrapper.findComponent(CardPokemon)
+        expect(cardsPokemon.exists()).toBe(true)
+    }
+
+    function expectLengthPokemon(cardPokemons, length) {
+        expect(cardPokemons.length).toBe(length)
+    }
 })

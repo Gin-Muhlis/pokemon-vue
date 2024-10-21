@@ -1,6 +1,5 @@
 // generate gambar pokemon
 export function handleImagePokemon(urlPokemon) {
-    console.log(urlPokemon)
 
     const segments = urlPokemon.split('/');
     const id = segments[segments.length - 2];

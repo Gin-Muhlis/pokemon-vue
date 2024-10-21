@@ -33,7 +33,7 @@
                     class="flex items-center justify-start gap-2">
                     <img src="/images/pokeball1.png" alt="Poke ball" class="w-4 grayscale">
                     <div class="px-2 py-1 rounded bg-sky-300">
-                        <p class="text-xs value-abilities">{{ ability.ability.name }}</p>
+                        <p class="text-xs text-white value-abilities">{{ ability.ability.name }}</p>
                     </div>
                 </div>
             </div>

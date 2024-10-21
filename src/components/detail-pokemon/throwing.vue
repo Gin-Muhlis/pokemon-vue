@@ -14,7 +14,8 @@
             </div>
 
             <!-- ketika berhasil menangkap pokemon -->
-            <div v-if="store.statusCatch == 'catching'" class="form-catch flex items-center justify-center flex-col input-parent">
+            <div v-if="store.statusCatch == 'catching'"
+                class="form-catch flex items-center justify-center flex-col input-parent">
                 <p class="font-semibold text-lg mb-7 text-catch-success">Wow you catch {{
                     handleNamePokemon(pokemon.name) }}...</p>
                 <p class="font-semibold text-lg mb-2">Give a Wild {{ handleNamePokemon(pokemon.name) }} Nickname</p>
@@ -22,7 +23,7 @@
                 <div class="mb-7 w-full flex items-center justify-center flex-col input-col">
                     <!-- input nickname pokemon -->
                     <input v-model="nickPokemon" type="text" placeholder="Your pokemon name..."
-                        class="input input-bordered w-full  max-w-xs mb-2 input-md" />
+                        class="input-nickname input input-bordered w-full  max-w-xs mb-2 input-md" />
 
                     <!-- error ketika nickname pokemon tidak diisi -->
                     <p v-if="errorInputNickname" class="text-sm text-red-500 font-semibold error-nickname-message">{{
@@ -30,13 +31,13 @@
                 </div>
                 <div class="w-full flex items-center justify-center gap-3">
                     <!-- button untuk melepaskan pokemon yang ditangkap -->
-                    <button class="btn btn-md bg-white border-sky-400 font-semibold hover:bg-white hover:border-sky-400"
+                    <button class="btn-release btn btn-md bg-white border-sky-400 font-semibold hover:bg-white hover:border-sky-400"
                         @click="releasePokemon">
                         Release
                     </button>
 
                     <!-- button untuk menyimpan data pokemon yang ditangkap -->
-                    <button class="btn btn-md bg-sky-400 font-semibold hover:bg-sky-400"
+                    <button class="btn-catch btn btn-md bg-sky-400 font-semibold hover:bg-sky-400"
                         @click="store.catchPokemon(pokemon)">
                         Catch
                     </button>
@@ -44,7 +45,7 @@
             </div>
 
             <!-- ketika pokemon tertangkap dan disimpan -->
-            <div v-if="store.statusCatch == 'catched'" class="flex items-center justify-center flex-col gap-5">
+            <div v-if="store.statusCatch == 'catched'" class="success-catch-message flex items-center justify-center flex-col gap-5">
                 <img src="/images/pokeball2.png" alt="Poke ball" class="w-16 object cover animate-spin">
                 <p class="font-bold text-lg">Well done</p>
                 <RouterLink to="/mypokemon">
@@ -63,6 +64,7 @@ import { storeToRefs } from 'pinia'
 import { handleNamePokemon } from '@/helpers/pokemon.js'
 import { handleModal } from '@/helpers/modal.js'
 import { generateRandNumber } from '@/helpers/pokemon.js'
+import { delay } from '@/helpers/time'
 
 // inisitasi state dan destrukturing state
 const store = usePokemonStore()
@@ -75,26 +77,27 @@ function releasePokemon() {
     emit('close')
 }
 
-function catchPokemon() {
+async function catchPokemon() {
     store.statusCatch = 'throwing'
 
-    setTimeout(() => {
-        // random number antara 1 dan 2
-        const randomNumber = generateRandNumber()
-        const isCatched = 2
-        
-        // cek apakah pokemon tertangkap
-        if (randomNumber == isCatched) {
-            store.statusCatch = "catching"
+    await delay(2000)
 
-        } else {
-            store.statusCatch = "run"
-            setTimeout(() => {
-                handleModal('throwing-modal', 'close')
-                emit('close')
-            }, 2000);
-        }
-    }, 2000);
+    // random number antara 1 dan 2
+    const randomNumber = generateRandNumber()
+    const isCatched = 2
+
+    // cek apakah pokemon tertangkap
+    if (randomNumber == isCatched) {
+        store.statusCatch = "catching"
+
+    } else {
+        store.statusCatch = "run"
+
+        await delay(2000)
+
+        handleModal('throwing-modal', 'close')
+        emit('close')
+    }
 }
 
 

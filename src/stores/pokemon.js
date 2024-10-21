@@ -67,7 +67,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
         try {
             const response = await getDetailPokemon(name)
             pokemonDetail.value = response.data
-            console.log(response.data)
+            
             statusGetDetailData.value = "success"
         } catch (error) {
             statusGetDetailData.value = "error"

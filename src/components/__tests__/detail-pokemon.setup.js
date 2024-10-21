@@ -1,16 +1,16 @@
 export const dummyPokemonData = {
-    data: {
-        id: 25,
+  data: {
+    id: 25,
     name: "pikachu",
     height: 4,
     weight: 60,
-    base_experience: 112, 
+    base_experience: 112,
     sprites: {
-        other: {
-            'official-artwork': {
-                front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
-            }
+      other: {
+        'official-artwork': {
+          front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
         }
+      }
     },
     types: [
       {
@@ -80,5 +80,5 @@ export const dummyPokemonData = {
         },
       },
     ],
-    }
-  };
+  }
+};

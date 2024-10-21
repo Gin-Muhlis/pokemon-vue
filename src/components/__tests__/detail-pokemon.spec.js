@@ -1,6 +1,6 @@
 import { getDetailPokemon } from "@/api/pokemon.api"
 import DetailPokemon from "@/views/DetailPokemon.vue"
-import { mount, RouterLinkStub } from "@vue/test-utils"
+import { flushPromises, mount, RouterLinkStub } from "@vue/test-utils"
 import { setActivePinia, createPinia } from "pinia"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import Alert from "../alert.vue"
@@ -12,6 +12,10 @@ import About from "../detail-pokemon/about.vue"
 import Stats from "../detail-pokemon/stats.vue"
 import Moves from "../detail-pokemon/moves.vue"
 import { generateRandNumber } from "@/helpers/pokemon"
+import { usePokemonStore } from "@/stores/pokemon"
+import Throwing from "../detail-pokemon/throwing.vue"
+import { handleModal } from "@/helpers/modal"
+
 
 vi.mock('vue-router', () => ({
     useRoute: () => ({
@@ -23,195 +27,213 @@ vi.mock('@/api/pokemon.api.js', () => ({
     getDetailPokemon: vi.fn()
 }))
 
-vi.mock('@/helpers/pokemon.js', async () => {
-    const actual = await vi.importActual('@/helpers/pokemon.js')
-    return {
-        ...actual,
-        generateRandNumber: vi.fn()
-    }
-})
+vi.mock('@/helpers/time.js')
+vi.mock('@/helpers/modal.js')
+
+vi.mock('@/helpers/pokemon.js')
 
 describe('DetailPokemon.vue', () => {
     const mockingData = dummyPokemonData
 
+    const tabs = [
+        { title: 'Tab About', className: '.tab-About', component: About },
+        { title: 'Tab Stats', className: '.tab-Stats', component: Stats },
+        { title: 'Tab Moves', className: '.tab-Moves', component: Moves },
+    ]
+
+    const listStatusCatch = [
+        { title: 'Pokemon run', valueNumber: 1, className: '.run-message' },
+        { title: 'Pokemon catched', valueNumber: 2, className: '.form-catch' }
+    ]
+
+    function mountComponent() {
+        return mount(DetailPokemon, {
+            global: {
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                }
+            },
+        });
+    }
+
+
     beforeEach(() => {
         setActivePinia(createPinia())
 
-        vi.useFakeTimers()
+        getDetailPokemon.mockResolvedValue(mockingData)
 
-        HTMLDialogElement.prototype.showModal = vi.fn()
-        HTMLDialogElement.prototype.close = vi.fn()
-    })
-
-    afterEach(() => {
-        vi.resetAllMocks()
-        vi.clearAllTimers()
-        vi.useRealTimers()
+        vi.clearAllMocks()
     })
 
     // cek error
     it('renders error message when error is present', async () => {
         getDetailPokemon.mockRejectedValueOnce(new Error('API Error'))
 
-        const wrapper = mount(DetailPokemon, {
-            global: {
-                stubs: {
-                    RouterLink: RouterLinkStub,
-                }
-            },
-        });
+        const wrapper = mountComponent()
 
-        await wrapper.vm.$nextTick()
-        await wrapper.vm.$nextTick()
+        await flushPromises()
 
-        expect(wrapper.findComponent(Alert).exists()).toBe(true);
-        expect(wrapper.findComponent(Alert).props('message')).toBe('Get pokemon failed');
+        expectAlertMessageShow(wrapper)
     });
 
     // cek loading
     it('renders loading while getting the data', async () => {
         getDetailPokemon.mockImplementation(() => new Promise(() => { }))
 
-        const wrapper = mount(DetailPokemon, {
-            global: {
-                stubs: {
-                    RouterLink: RouterLinkStub,
-                }
-            },
-        });
+        const wrapper = mountComponent()
 
-        await wrapper.vm.$nextTick()
-
-        expect(wrapper.findComponent(Loading).exists()).toBe(true)
+        expectLoadingShow(wrapper)
     })
 
     // cek data
     it('renders pokemon and detail data pokemon when it ready', async () => {
-        getDetailPokemon.mockResolvedValueOnce(mockingData)
+        const wrapper = mountComponent()
 
-        const wrapper = mount(DetailPokemon, {
-            global: {
-                stubs: {
-                    RouterLink: RouterLinkStub,
-                }
-            },
-        });
+        await flushPromises()
 
-        await wrapper.vm.$nextTick()
-        await wrapper.vm.$nextTick()
-
-        expect(wrapper.findComponent(Sprite).exists()).toBe(true)
-        expect(wrapper.findComponent(Data).exists()).toBe(true)
+        expectPokemonDataShow(wrapper)
     })
 
     // cek tab detail pokemon
-    it('renders the right content based on tab', async () => {
-        getDetailPokemon.mockResolvedValueOnce(mockingData)
+    it.each(tabs)('renders the right content based on tab $title', async ({ className, component }) => {
+        const wrapper = mountComponent()
 
-        const wrapper = mount(DetailPokemon, {
-            global: {
-                stubs: {
-                    RouterLink: RouterLinkStub,
-                }
-            },
-        });
+        await flushPromises()
 
-        await wrapper.vm.$nextTick()
-        await wrapper.vm.$nextTick()
+        await clickTabButton(wrapper, className)
 
+        expectTabContentShow(wrapper, component)
+    })
+
+    // cek ketika throw poke ball
+    it.each(listStatusCatch)('render content when pokemon throw poke ball $title', async ({ valueNumber, className }) => {
+        generateRandNumber.mockReturnValueOnce(valueNumber)
+
+        const wrapper = mountComponent()
+
+        await flushPromises()
+
+        await throwPokeBall(wrapper)
+
+        expectContentStatus(className)
+    })
+
+    // cek close modal
+    it('close modal when releasing pokemon', async () => {
+        const wrapper = await catchingPokemon()
+
+        const modalComponent = wrapper.findComponent(Throwing)
+        const btnRelease = modalComponent.find('.btn-release')
+
+        await btnRelease.trigger('click')
+
+        expectCloseFormCatch()
+    })
+
+    // cek error input
+    it('show error message when the input is not filled in', async () => {
+        const wrapper = await catchingPokemon()
+
+        const modalComponent = wrapper.findComponent(Throwing)
+        
+        await clickCatchPokemon(modalComponent)
+        
+        const errorMessage = modalComponent.find('.error-nickname-message')
+        
+        expectShowErrorInputMessage(errorMessage)
+    })
+
+    // cek sukses message
+    it('show success message when successfully catch a pokemon', async () => {
+        const wrapper = await catchingPokemon()
+
+        let modalComponent = wrapper.findComponent(Throwing)
+
+        const inputNickname = modalComponent.find('.input-nickname')
+
+        inputNickname.setValue('pikapoke')
+
+        await clickCatchPokemon(modalComponent)
+
+        const successMessage = modalComponent.find('.success-catch-message')
+        
+        expectShowSuccessMessage(successMessage)
+
+    })
+
+    // expect function
+    function expectAlertMessageShow(wrapper) {
+        expect(wrapper.findComponent(Alert).exists()).toBe(true);
+        expect(wrapper.findComponent(Alert).props('message')).toBe('Get pokemon failed');
+    }
+
+    function expectLoadingShow(wrapper) {
+        expect(wrapper.findComponent(Loading).exists()).toBe(true)
+    }
+
+    function expectPokemonDataShow(wrapper) {
+        expect(wrapper.findComponent(Sprite).exists()).toBe(true)
+        expect(wrapper.findComponent(Data).exists()).toBe(true)
+    }
+
+    async function expectTabContentShow(wrapper, component) {
+        const data = wrapper.findComponent(component)
+        expect(data.exists()).toBe(true)
+    }
+
+
+    function expectContentStatus(className) {
+        const message = document.querySelector(className)
+
+        expect(message).not.toBeNull()
+    }
+
+    function expectShowErrorInputMessage(componentError) {
+        expect(componentError).not.toBe(null)
+    }
+
+    function expectShowSuccessMessage(componentSuccess) {
+        
+        expect(componentSuccess).not.toBe(null)
+    }
+
+    // aksi
+    async function clickTabButton(wrapper, className) {
         const dataPokemon = wrapper.findComponent(Data)
-        expect(dataPokemon.exists()).toBe(true)
 
-        const tabAbout = dataPokemon.find('.tab-About')
+        const tab = dataPokemon.find(className)
 
-        await tabAbout.trigger('click')
-
-        await wrapper.vm.$nextTick()
-
-        const dataAbout = wrapper.findComponent(About)
-        expect(dataAbout.exists()).toBe(true)
-
-        const tabStats = dataPokemon.find('.tab-Stats')
-
-        await tabStats.trigger('click')
+        await tab.trigger('click')
 
         await wrapper.vm.$nextTick()
+    }
 
-        const dataStats = wrapper.findComponent(Stats)
-        expect(dataStats.exists()).toBe(true)
-
-        const tabMoves = dataPokemon.find('.tab-Moves')
-
-        await tabMoves.trigger('click')
-
-        await wrapper.vm.$nextTick()
-
-        const dataMoves = wrapper.findComponent(Moves)
-        expect(dataMoves.exists()).toBe(true)
-    })
-
-    // cek pesan pokemon lari ketika melempar poke ball
-    it('render message when pokemon is run', async () => {
-        getDetailPokemon.mockResolvedValueOnce(mockingData)
-
-        generateRandNumber.mockReturnValue(1)
-        
-        const wrapper = mount(DetailPokemon, {
-            global: {
-                stubs: {
-                    RouterLink: RouterLinkStub,
-                }
-            },
-        });
-
-        await wrapper.vm.$nextTick()
-        await wrapper.vm.$nextTick()
-
+    async function throwPokeBall(wrapper) {
         const sprite = wrapper.findComponent(Sprite)
-        expect(sprite.exists()).toBe(true)
-
         const buttonPokeBall = sprite.find('.btn-poke-ball')
 
         await buttonPokeBall.trigger('click')
-        
-        vi.advanceTimersByTime(2000)
+    }
 
-        await wrapper.vm.$nextTick();
-        
-        const runMessage = document.querySelector('.run-message')
-        
-        expect(runMessage).not.toBeNull()
-    })
+    function expectCloseFormCatch() {
+        expect(handleModal).toHaveBeenLastCalledWith('throwing-modal', 'close')
+    }
 
-    // cek form tangkap pokemon ketika melempar poke ball dan berhasil
-    it('renders form catch pokemon when pokemon is catched', async () => {
-        getDetailPokemon.mockResolvedValueOnce(mockingData)
+    async function catchingPokemon() {
+        generateRandNumber.mockReturnValueOnce(2)
 
-        generateRandNumber.mockReturnValue(2)
-        
-        const wrapper = mount(DetailPokemon, {
-            global: {
-                stubs: {
-                    RouterLink: RouterLinkStub,
-                }
-            },
-        });
+        const wrapper = mountComponent()
 
-        await wrapper.vm.$nextTick()
-        await wrapper.vm.$nextTick()
+        await flushPromises()
 
-        const sprite = wrapper.findComponent(Sprite)
-        expect(sprite.exists()).toBe(true)
+        await throwPokeBall(wrapper)
 
-        const buttonPokeBall = sprite.find('.btn-poke-ball')
+        return wrapper
+    }
 
-        await buttonPokeBall.trigger('click')
-        vi.advanceTimersByTime(2000)
+    async function clickCatchPokemon(modalComponent) {
+        const catchButton = modalComponent.find('.btn-catch')
 
-        await wrapper.vm.$nextTick();
-        
-        const runMessage = document.querySelector('.form-catch')
-        
-        expect(runMessage).not.toBeNull()
-    })
+        await catchButton.trigger('click')
+    }
 })
