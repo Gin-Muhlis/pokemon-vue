@@ -32,7 +32,7 @@
 import CardPokemon from "@/components/card-pokemon.vue"
 import SkeletonCard from "@/components/home/skeleton-card.vue"
 import Alert from "@/components/alert.vue"
-import Loading from "@/components/loading.vue"
+import Loading from "@/components/TempLoading.vue"
 import { onMounted } from "vue"
 import { usePokemonStore } from "@/stores/pokemon.js"
 import { storeToRefs } from "pinia"
