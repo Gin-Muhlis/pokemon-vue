@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import Home from '@/views/Home.vue'
 import DetailPokemon from '@/views/DetailPokemon.vue'
 import CardPokemon from '../card-pokemon.vue'
 import SkeletonCard from '../home/skeleton-card.vue'
-import Alert from '../alert.vue'
+import Alert from '../TempAlert.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { usePokemonStore } from '@/stores/pokemon.js'
 import { getPokemonList } from '@/api/pokemon.api.js';
@@ -26,9 +26,11 @@ vi.mock('@/api/pokemon.api.js', () => ({
 describe('Home.vue', () => {
     beforeEach(() => {
         setActivePinia(createPinia())
-
-        getPokemonList.mockClear()
     });
+
+    afterEach(() => {
+        vi.resetAllMocks()
+    })
 
 
     // cek error message ketika terjadi error
@@ -164,15 +166,16 @@ describe('Home.vue', () => {
         const cardPokemon = wrapper.findComponent(CardPokemon)
         expect(cardPokemon.exists()).toBe(true)
 
-
         const linkDetail = cardPokemon.findComponent(RouterLinkStub)
         expect(linkDetail.props().to).toBe('/pokemon/pikachu')
+        
 
-        // await linkDetail.trigger('click');
 
-        // await router.isReady();
-        // await wrapper.vm.$nextTick();
+        // await linkDetail.trigger('click')
 
-        // expect(wrapper.vm.$router.currentRoute.value.fullPath).toBe('/pokemon/pikachu');
+        // await router.isReady()
+        // await wrapper.vm.$nextTick()
+
+        // expect(wrapper.vm.$router.currentRoute.value.fullPath).toBe('/pokemon/pikachu')
     })
 });

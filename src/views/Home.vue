@@ -31,7 +31,7 @@
 <script setup>
 import CardPokemon from "@/components/card-pokemon.vue"
 import SkeletonCard from "@/components/home/skeleton-card.vue"
-import Alert from "@/components/alert.vue"
+import Alert from "@/components/TempAlert.vue"
 import Loading from "@/components/loading.vue"
 import { onMounted } from "vue"
 import { usePokemonStore } from "@/stores/pokemon.js"

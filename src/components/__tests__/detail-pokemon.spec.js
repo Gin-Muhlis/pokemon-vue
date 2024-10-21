@@ -3,7 +3,7 @@ import DetailPokemon from "@/views/DetailPokemon.vue"
 import { mount, RouterLinkStub } from "@vue/test-utils"
 import { setActivePinia, createPinia } from "pinia"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import Alert from "../alert.vue"
+import Alert from "../TempAlert.vue"
 import Loading from "../loading.vue"
 import { dummyPokemonData } from "./detail-pokemon.setup"
 import Data from "../detail-pokemon/data.vue"
@@ -37,9 +37,6 @@ describe('DetailPokemon.vue', () => {
     beforeEach(() => {
         setActivePinia(createPinia())
 
-        getDetailPokemon.mockClear()
-        generateRandNumber.mockClear()
-
         vi.useFakeTimers()
 
         HTMLDialogElement.prototype.showModal = vi.fn()
@@ -47,6 +44,7 @@ describe('DetailPokemon.vue', () => {
     })
 
     afterEach(() => {
+        vi.resetAllMocks()
         vi.clearAllTimers()
         vi.useRealTimers()
     })
